@@ -3,6 +3,8 @@
 #include <string>
 #include <stdio.h>
 #include <iomanip>
+#include <vector>
+#include <deque>
 
 void sort(int* arr, int size, bool (*compare)(int, int)) {
     for(int i = 0; i < size; i++) {
@@ -85,11 +87,30 @@ void test_print_array() {
     print(floatArray, sizeof(floatArray)/sizeof(float));
 }
 
+void test_vector() {
+    std::vector<int> vec { 4, 3, 1, 5, 8 };
+    std::for_each(vec.begin(), vec.end(), [](int& i) { std::cout << i << std::endl; });
+    std::sort(vec.begin(), vec.end());
+    std::for_each(vec.begin(), vec.end(), [](int& i) { std::cout << i << std::endl; });
+}
+
+void test_deque() {
+    std::deque<int> deq;
+    deq.push_back(12);
+    deq.push_back(15);
+
+    int* p = &deq[0];
+    p++;
+    std::cout << "Dequeue: " << *p << std::endl;
+}
+
 int main() {
-    // test_print_f();
-    // test_fopen();
-    // test_cin();
-    // test_fstream();
-    // test_cout_manipulator();
+    test_print_f();
+    test_fopen();
+    test_cin();
+    test_fstream();
+    test_cout_manipulator();
     test_print_array();
+    test_vector();
+    test_deque();
 }
