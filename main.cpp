@@ -64,8 +64,11 @@ void test_cin() {
 void test_cout_manipulator() {
     bool isCool = true;
     float number = 2.345;
-    std::cout << "Boolean: " << std::boolalpha << isCool << std::endl;
+    float integer = 2;
+    std::cout << "Boolean: " << std::boolalpha << isCool << "No: " << isCool << std::endl;
     std::cout << "Precision: " << std::setprecision(3) << number << std::endl;
+    std::cout << "With point: " << std::showpoint << integer << std::endl;
+    std::cout << std::setw(10) << std::setfill('_') << std::noshowpoint << integer << std::endl;
 }
 
 int main() {
