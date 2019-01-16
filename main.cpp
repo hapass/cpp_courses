@@ -71,10 +71,25 @@ void test_cout_manipulator() {
     std::cout << std::setw(10) << std::setfill('_') << std::noshowpoint << integer << std::endl;
 }
 
+template<class T> void print(T* array, const int n) {
+    for(int i = 0; i < n; i++) {
+        std::cout << array[i] << std::endl;
+    }
+}
+
+void test_print_array() {
+    int integerArray[] { 1, 2, 3, 4, 5 };
+    float floatArray[] { 1.1, 2.2, 3.3, 4.4, 5.5 };
+
+    print(integerArray, sizeof(integerArray)/sizeof(int));
+    print(floatArray, sizeof(floatArray)/sizeof(float));
+}
+
 int main() {
     // test_print_f();
     // test_fopen();
     // test_cin();
     // test_fstream();
-    test_cout_manipulator();
+    // test_cout_manipulator();
+    test_print_array();
 }
