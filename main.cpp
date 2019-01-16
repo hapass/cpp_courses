@@ -104,13 +104,57 @@ void test_deque() {
     std::cout << "Dequeue: " << *p << std::endl;
 }
 
+void test_erase_5(std::vector<int> vec) {
+    int offset = 1;
+    while(true) {
+        int current = vec[offset];
+
+        if(offset >= vec.size() - 1) {
+            break;
+        }
+
+        int previous = vec[offset - 1];
+        int next = vec[offset + 1];
+        int average = (previous + current + next) / 3;
+        if(current - average / 3 > average) {
+            vec.erase(vec.begin() + offset);
+            offset = 1;
+        } else {
+            offset++;
+        }
+    }
+
+    std::cout << "--------------------" << std::endl;
+    std::for_each(vec.begin(), vec.end(), [](int& i) { std::cout << i << std::endl; });
+    std::cout << "--------------------" << std::endl;
+}
+
+void test_revert_6() {
+    std::string str;
+    std::cin >> str;
+    std::reverse(str.begin(), str.end());
+    std::cout << str << std::endl;
+}
+
 int main() {
-    test_print_f();
-    test_fopen();
-    test_cin();
-    test_fstream();
-    test_cout_manipulator();
-    test_print_array();
-    test_vector();
-    test_deque();
+    //lection day 2
+    //-------------
+    // test_print_f();
+    // test_fopen();
+    // test_cin();
+    // test_fstream();
+    // test_cout_manipulator();
+    // test_print_array();
+    // test_vector();
+    // test_deque();
+    //-------------
+
+    //practice day 2
+    //-------------
+    // test_erase_5({ 1, 1000, 1, 1 });
+    // test_erase_5({ 1, 1000, 100, 2 });
+    // test_erase_5({ 1, 1, 1, 1000 });
+    // test_erase_5({ 1, 10, 100, 1000, 1 });
+    // test_revert_6();
+    //-------------
 }
