@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <stdio.h>
+#include <iomanip>
 
 void sort(int* arr, int size, bool (*compare)(int, int)) {
     for(int i = 0; i < size; i++) {
@@ -60,9 +61,17 @@ void test_cin() {
     }
 }
 
+void test_cout_manipulator() {
+    bool isCool = true;
+    float number = 2.345;
+    std::cout << "Boolean: " << std::boolalpha << isCool << std::endl;
+    std::cout << "Precision: " << std::setprecision(3) << number << std::endl;
+}
+
 int main() {
-    //test_print_f();
-    //test_fopen();
-    //test_cin();
-    test_fstream();
+    // test_print_f();
+    // test_fopen();
+    // test_cin();
+    // test_fstream();
+    test_cout_manipulator();
 }
