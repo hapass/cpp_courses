@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <stdio.h>
 
@@ -14,7 +15,7 @@ void sort(int* arr, int size, bool (*compare)(int, int)) {
     }
 }
 
-void test_sort() {
+void test_print_f() {
     int arr[] { 4, 2, 3, 5, 6, 1 };
     int size = sizeof(arr)/sizeof(int);
     sort(arr, size, [](int a, int b) -> bool { return a > b; });
@@ -24,7 +25,7 @@ void test_sort() {
     }
 }
 
-void test_file() {
+void test_fopen() {
     auto pFile = fopen("data.txt", "r");
 
     if(pFile) {
@@ -39,7 +40,29 @@ void test_file() {
     }
 }
 
+void test_fstream() {
+    std::ifstream myfile;
+    myfile.open("data.txt");
+    if(myfile.is_open()) {
+        std::string line;
+        std::getline(myfile, line);
+        std::cout << line << std::endl;
+    }
+}
+
+void test_cin() {
+    int i;
+    while(std::cin >> i) {
+        if(i == 0) {
+            break;
+        }
+        std::cout << "Input value: " << i << std::endl;
+    }
+}
+
 int main() {
-    test_sort();
-    test_file();
+    //test_print_f();
+    //test_fopen();
+    //test_cin();
+    test_fstream();
 }
