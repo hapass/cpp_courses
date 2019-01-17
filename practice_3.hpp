@@ -217,17 +217,6 @@ namespace math
         return out;
     }
 
-    std::istream& operator>> (std::istream& in, Matrix& mat) {
-        for(int row = 0; row < mat.rows; row++) {
-            for(int column = 0; column < mat.columns; column++) {
-                float value;
-                in >> value;
-                mat.element(row, column, value);
-            }
-        }
-        return in;
-    }
-
     class MatrixFactory {
         private:
             ValueValidator& validator;
@@ -272,7 +261,7 @@ namespace math
         std::ifstream matrixFile;
         matrixFile.open("matrix.txt");
         if(matrixFile.is_open()) {
-            FloatValueValidator validator;
+            BitValueValidator validator;
             MatrixFactory factory(validator);
 
             Matrix one = factory.from_stream(matrixFile);
