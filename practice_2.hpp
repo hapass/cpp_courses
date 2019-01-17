@@ -45,6 +45,8 @@ void test_1() {
 struct Phone {
     int code;
     int number;
+
+    Phone(int code, int number) : code(code), number(number) {}
 };
 
 std::ostream& operator<< (std::ostream& out, const Phone& phone) {
@@ -58,11 +60,7 @@ std::ostream& operator<< (std::ostream& out, const Phone& phone) {
 }
 
 void test_2() {
-    Phone phone;
-    phone.code = 29;
-    phone.number = 1234561;
-
-    std::cout << phone << std::endl;
+    std::cout << Phone(29, 1234561) << std::endl;
 }
 
 /*
