@@ -1,1 +1,4 @@
-Hello, world!
+Minsk 0
+Berlin 10
+Copenhagen 25
+Riga 40
