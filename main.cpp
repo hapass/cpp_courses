@@ -2,6 +2,7 @@
 #include "lecture_2.hpp"
 #include "lecture_3.hpp"
 #include "practice_2.hpp"
+#include "practice_3.hpp"
 
 int main() {
     //lecture day 1
@@ -39,5 +40,10 @@ int main() {
     //lecture day 3
     //-------------
     // test_class();
+    //-------------
+
+    //practice day 3
+    //-------------
+    math::test_1();
     //-------------
 }
