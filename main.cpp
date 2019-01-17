@@ -105,22 +105,22 @@ void test_deque() {
 }
 
 void test_erase_5(std::vector<int> vec) {
-    int offset = 1;
+    int index = 1;
     while(true) {
-        int current = vec[offset];
+        int current = vec[index];
 
-        if(offset >= vec.size() - 1) {
+        if(index >= vec.size() - 1) {
             break;
         }
 
-        int previous = vec[offset - 1];
-        int next = vec[offset + 1];
+        int previous = vec[index - 1];
+        int next = vec[index + 1];
         int average = (previous + current + next) / 3;
         if(current - average / 3 > average) {
-            vec.erase(vec.begin() + offset);
-            offset = 1;
+            vec.erase(vec.begin() + index);
+            index--;
         } else {
-            offset++;
+            index++;
         }
     }
 
