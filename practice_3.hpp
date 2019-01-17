@@ -1,28 +1,65 @@
+#pragma once
+
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <assert.h>
+#include <math.h>
 
 namespace math
 {
+    class ValueValidator {
+        public: virtual bool validate(float value) = 0;
+    };
+
+    class BitValueValidator: public ValueValidator {
+        public: bool validate(float value);
+    };
+
+    bool BitValueValidator::validate(float value) {
+        float ceil_value = ceilf(value);
+        return ceil_value == value && (value == 0 || value == 1);
+    }
+
+    class IntegerValueValidator: public ValueValidator {
+        public: bool validate(float value);
+    };
+
+    bool IntegerValueValidator::validate(float value) {
+        float ceil_value = ceilf(value);
+        return ceil_value == value && value >= -100 && value <= 100;
+    }
+
+    class FloatValueValidator: public ValueValidator {
+        public: bool validate(float value);
+    };
+
+    bool FloatValueValidator::validate(float value) {
+        return true;
+    }
+
+    enum class MatrixType {
+        Undefined,
+        Bit,
+        Integer,
+        Float
+    };
+
     class Matrix {
-        private:
-            std::vector<float> matrix;
         public:
             const int rows;
             const int columns;
 
             Matrix(int rows, int columns);
 
+            MatrixType type();
+
             float element(int row, int column) const;
-            void set_element(int row, int column, float value);
+            void element(int row, int column, float value);
 
             std::vector<float> row(int row) const;
             std::vector<float> column(int column) const;
 
-            float dot(std::vector<float> first, std::vector<float> second) const;
-
-            std::vector<float> add(std::vector<float> first, std::vector<float> second) const;
             Matrix add(Matrix other) const;
             Matrix add(float value) const;
 
@@ -31,18 +68,50 @@ namespace math
 
             Matrix negate() const;
             Matrix transpose() const;
+        private:
+            MatrixType matrixType;
+            std::vector<float> matrix;
+
+            float dot(std::vector<float> first, std::vector<float> second) const;
     };
 
-    Matrix::Matrix(int rows, int columns): rows(rows), columns(columns), matrix(rows * columns) {}
+    Matrix::Matrix(int rows, int columns): rows(rows), columns(columns), matrix(rows * columns), matrixType(MatrixType::Undefined) {}
 
-    void Matrix::set_element(int row, int column, float value) {
+    void Matrix::element(int row, int column, float value) {
         assert(row < rows && column < columns);
+        matrixType = MatrixType::Undefined;
         matrix[row * columns + column] = value;
     }
 
     float Matrix::element(int row, int column) const {
         assert(row < rows && row >= 0 && column < columns && column >= 0);
         return matrix[row * columns + column];
+    }
+
+    MatrixType Matrix::type() {
+        if(matrixType != MatrixType::Undefined) {
+            return matrixType;
+        }
+
+        for(int row = 0; row < rows; row++) {
+            for(int column = 0; column < columns; column++) {
+                float value = element(row, column);
+
+                if(matrixType != MatrixType::Float && matrixType != MatrixType::Integer && BitValueValidator().validate(value)) {
+                    matrixType = MatrixType::Bit;
+                    continue;
+                }
+
+                if(matrixType != MatrixType::Float && IntegerValueValidator().validate(value)) {
+                    matrixType = MatrixType::Integer;
+                    continue;
+                }
+
+                matrixType = MatrixType::Float;
+            }
+        }
+
+        return matrixType;
     }
 
     std::vector<float> Matrix::row(int row) const {
@@ -72,24 +141,13 @@ namespace math
         return result;
     }
 
-    std::vector<float> Matrix::add(std::vector<float> first, std::vector<float> second) const {
-        assert(first.size() == second.size());
-
-        std::vector<float> result;
-        for(int i = 0; i < first.size(); i++) {
-            result.push_back(first[i] + second[i]);
-        }
-
-        return result;
-    }
-
     Matrix Matrix::add(Matrix other) const {
         assert(rows == other.rows && columns == other.columns);
 
         Matrix result(rows, columns);
         for(int row = 0; row < rows; row++) {
             for(int column = 0; column < columns; column++) {
-                result.set_element(row, column, element(row, column) + other.element(row, column));
+                result.element(row, column, element(row, column) + other.element(row, column));
             }
         }
 
@@ -100,7 +158,7 @@ namespace math
         Matrix result(rows, columns);
         for(int row = 0; row < rows; row++) {
             for(int column = 0; column < columns; column++) {
-                result.set_element(row, column, element(row, column) + value);
+                result.element(row, column, element(row, column) + value);
             }
         }
 
@@ -112,7 +170,7 @@ namespace math
 
         for(int row = 0; row < rows; row++) {
             for(int column = 0; column < other.columns; column++) {
-                result.set_element(row, column, Matrix::dot(Matrix::row(row), other.column(column)));
+                result.element(row, column, Matrix::dot(Matrix::row(row), other.column(column)));
             }
         }
 
@@ -123,7 +181,7 @@ namespace math
         Matrix result(rows, columns);
         for(int row = 0; row < rows; row++) {
             for(int column = 0; column < columns; column++) {
-                result.set_element(row, column, element(row, column) * value);
+                result.element(row, column, element(row, column) * value);
             }
         }
 
@@ -138,7 +196,7 @@ namespace math
         Matrix result(columns, rows);
         for(int row = 0; row < rows; row++) {
             for(int column = 0; column < columns; column++) {
-                result.set_element(column, row, element(row, column));
+                result.element(column, row, element(row, column));
             }
         }
 
@@ -147,7 +205,7 @@ namespace math
 
     std::ostream& operator<< (std::ostream& out, const std::vector<float>& vec) {
         for(auto i = vec.begin(); i < vec.end(); i++) {
-            out << *i << ' ';
+            out << *i << out.fill();
         }
         return out;
     }
@@ -164,39 +222,23 @@ namespace math
             for(int column = 0; column < mat.columns; column++) {
                 float value;
                 in >> value;
-                mat.set_element(row, column, value);
+                mat.element(row, column, value);
             }
         }
         return in;
     }
 
-    class MatrixInput {
+    class MatrixFactory {
         private:
-            bool (*validator)(float& value);
+            ValueValidator& validator;
         public:
-            MatrixInput(bool (*validator)(float& value));
+            MatrixFactory(ValueValidator& validator);
             Matrix from_stream(std::istream& in);
-            Matrix from_vector(std::vector<float> vec);
     };
 
-    MatrixInput::MatrixInput(bool (*validator)(float& value)): validator(validator) {}
+    MatrixFactory::MatrixFactory(ValueValidator& validator): validator(validator) {}
 
-    Matrix MatrixInput::from_vector(std::vector<float> vec) {
-        assert(vec.size() >= 2);
-        assert(vec.size() == (vec[0] * vec[1]) + 2);
-
-        Matrix result(vec[0], vec[1]);
-        for(int row = 0; row < vec[0]; row++) {
-            for(int column = 0; column < vec[1]; column++) {
-                float value = vec[row * vec[1] + column + 2];
-                assert(validator(value));
-                result.set_element(row, column, value);
-            }
-        }
-        return result;
-    }
-
-    Matrix MatrixInput::from_stream(std::istream& in) {
+    Matrix MatrixFactory::from_stream(std::istream& in) {
         float rows;
         float columns;
 
@@ -208,21 +250,41 @@ namespace math
                 float value;
                 in >> value;
 
-                assert(validator(value));
-                result.set_element(row, column, value);
+                assert(validator.validate(value));
+                result.element(row, column, value);
             }
         }
         return result;
     }
 
+    char matrix_char(MatrixType type) {
+        char ch;
+        switch(type) {
+            case MatrixType::Bit: ch = '/';  break;
+            case MatrixType::Integer: ch = '-'; break;
+            case MatrixType::Float: ch = ' '; break;
+            default: ch = '*'; break;
+        }
+        return ch;
+    } 
+
     void test_1() {
         std::ifstream matrixFile;
         matrixFile.open("matrix.txt");
         if(matrixFile.is_open()) {
-            MatrixInput input([](float& value) { return true; });
-            Matrix mat = input.from_stream(matrixFile);
-            std::cout << mat << std::endl << std::endl;
-            std::cout << mat.transpose();
+            FloatValueValidator validator;
+            MatrixFactory factory(validator);
+
+            Matrix one = factory.from_stream(matrixFile);
+            Matrix other = one.transpose();
+
+            std::cout << std::setfill(matrix_char(one.type())) << one << std::endl;
+            std::cout << std::setfill(matrix_char(other.type())) << other << std::endl;
+
+            Matrix result = one.multiply(other);
+            std::cout << std::setfill(matrix_char(result.type())) << result << std::endl;
+
+            std::cout << result.transpose().negate().add(10).multiply(2) << std::endl;
         }
     }
 }
