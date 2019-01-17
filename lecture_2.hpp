@@ -9,7 +9,7 @@
 #include <deque>
 
 void test_fopen() {
-    auto pFile = fopen("data.txt", "r");
+    auto pFile = fopen("cities.txt", "r");
 
     if(pFile) {
         std::cout << "file opened" << std::endl;
@@ -25,7 +25,7 @@ void test_fopen() {
 
 void test_fstream() {
     std::ifstream myFile;
-    myFile.open("data.txt");
+    myFile.open("cities.txt");
     if(myFile.is_open()) {
         std::string line;
         std::getline(myFile, line);

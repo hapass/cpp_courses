@@ -5,5 +5,6 @@ CXXFLAGS = -std=c++11 -g
 
 main:
 	mkdir -p ${BINFOLDER}
-	cp data.txt bin/data.txt
+	cp cities.txt bin/cities.txt
+	cp words.txt bin/words.txt
 	$(CXX) $(CXXFLAGS) -o ${BINFOLDER}/main main.cpp

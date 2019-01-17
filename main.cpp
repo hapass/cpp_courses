@@ -21,11 +21,13 @@ int main() {
 
     //practice day 2
     //-------------
+    // test_1();
+    // test_2();
     // std::vector<int> integers { 1, 2, 3, 4, 5 };
     // test_3(integers);
     // std::vector<float> floats { 1.1, 2.2, 3.3, 4.4, 5.5 };
     // test_3(floats);
-    // test_4();
+    test_4();
     // test_5({ 1, 1000, 1, 1 });
     // test_5({ 1, 1000, 100, 2 });
     // test_5({ 1, 1, 1, 1000 });

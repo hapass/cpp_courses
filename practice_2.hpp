@@ -5,9 +5,65 @@
 #include <fstream>
 
 /*
+    Read file with 3 words.
+    Print first word aligned by left side.
+    Print second word aligned by center.
+    Print last word aligned by right side.
+*/
+int center(int width, std::string word) {
+    return (width - word.length()) / 2;
+}
+
+int left(int width, std::string word) {
+    return width - center(width, word) - word.length();
+}
+
+void test_1() {
+    std::ifstream words;
+    words.open("words.txt");
+
+    if(words.is_open()) {
+        std::string first_word;
+        std::string second_word;
+        std::string third_word;
+
+        words >> first_word >> second_word >> third_word;
+        
+        int width = 40;
+        char fill = '*';
+
+        std::cout 
+            << std::setw(width) << std::setfill(fill) << std::left << first_word << std::endl
+            << std::string(center(width, second_word), fill) << second_word << std::string(left(width, second_word), fill) << std::endl
+            << std::setw(width) << std::right << third_word << std::endl;
+    }
+}
+
+/*
     Override << operator for structure containing mobile phone number.
 */
+struct Phone {
+    int code;
+    int number;
+};
 
+std::ostream& operator<< (std::ostream& out, const Phone& phone) {
+    std::string number = std::to_string(phone.number);
+
+    out 
+        << '(' << std::setw(3) << std::setfill('0') << phone.code << ')'
+        << ' ' << number.substr(0, 3) << '-' << number.substr(3, 2) << '-' << number.substr(5, 2);
+
+    return out;
+}
+
+void test_2() {
+    Phone phone;
+    phone.code = 29;
+    phone.number = 1234561;
+
+    std::cout << phone << std::endl;
+}
 
 /*
     Find a sum of elements in a list.
@@ -28,11 +84,8 @@ void test_3(std::vector<T> list) {
     Use pair and vector.
 */
 void test_4() {
-    int targetDistance;
-    std::cin >> targetDistance;
-
     std::ifstream cities;
-    cities.open("data.txt");
+    cities.open("cities.txt");
     std::vector<std::pair<int, std::string>> list;
     if(cities.is_open()) {
         std::string name;
@@ -43,12 +96,14 @@ void test_4() {
         }
     }
 
-    auto iterator = std::find_if(list.begin(), list.end(), [&](std::pair<int, std::string>& p){ return p.first == targetDistance; });
+    std::sort(list.begin(), list.end(), [](std::pair<int, std::string>& first, std::pair<int, std::string>& second){
+        return first.first < second.first;
+    });
     
-    if(iterator != list.end()) {
-        std::cout << iterator->second << '\n';
+    if(list.size() > 0) {
+        std::cout << list[0].second << std::endl;
     } else {
-        std::cout << "nothing found" << '\n';
+        std::cout << "list is empty" << std::endl;
     }
 }
 
