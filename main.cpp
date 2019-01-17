@@ -1,5 +1,6 @@
 #include "lecture_1.hpp"
 #include "lecture_2.hpp"
+#include "lecture_3.hpp"
 #include "practice_2.hpp"
 
 int main() {
@@ -33,5 +34,10 @@ int main() {
     // test_5({ 1, 1, 1, 1000 });
     // test_5({ 1, 10, 100, 1000, 1 });
     // test_6();
+    //-------------
+
+    //lecture day 3
+    //-------------
+    // test_class();
     //-------------
 }
