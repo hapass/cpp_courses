@@ -106,17 +106,9 @@ void test_deque() {
 
 void test_erase_5(std::vector<int> vec) {
     int index = 1;
-    while(true) {
-        int current = vec[index];
-
-        if(index >= vec.size() - 1) {
-            break;
-        }
-
-        int previous = vec[index - 1];
-        int next = vec[index + 1];
-        int average = (previous + current + next) / 3;
-        if(current - average / 3 > average) {
+    while(index < vec.size() - 1) {
+        int average = (vec[index - 1] + vec[index] + vec[index + 1]) / 3;
+        if(vec[index] - average / 3 > average) {
             vec.erase(vec.begin() + index);
             index--;
         } else {
@@ -151,10 +143,10 @@ int main() {
 
     //practice day 2
     //-------------
-    // test_erase_5({ 1, 1000, 1, 1 });
-    // test_erase_5({ 1, 1000, 100, 2 });
-    // test_erase_5({ 1, 1, 1, 1000 });
-    // test_erase_5({ 1, 10, 100, 1000, 1 });
+    test_erase_5({ 1, 1000, 1, 1 });
+    test_erase_5({ 1, 1000, 100, 2 });
+    test_erase_5({ 1, 1, 1, 1000 });
+    test_erase_5({ 1, 10, 100, 1000, 1 });
     // test_revert_6();
     //-------------
 }
