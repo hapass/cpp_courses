@@ -31,7 +31,7 @@ int main() {
 
     // lecture_3::test_class();
 
-    // practice_3::test_1();
+    practice_3::test_1();
 
     // lecture_4::test_reinterpret();
     // lecture_4::test_functor();

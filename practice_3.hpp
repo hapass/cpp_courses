@@ -247,7 +247,8 @@ namespace practice_3
                 result.element(row, column, value);
             }
         }
-        return result;
+        
+        return std::move(result);
     }
 
     char matrix_char(MatrixType type) {
