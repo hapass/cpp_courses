@@ -3,6 +3,7 @@
 #include "lecture_3.hpp"
 #include "practice_2.hpp"
 #include "practice_3.hpp"
+#include "lecture_4.hpp"
 
 int main() {
     // lecture_1::test_printf();
@@ -31,4 +32,8 @@ int main() {
     // lecture_3::test_class();
 
     // practice_3::test_1();
+
+    // lecture_4::test_reinterpret();
+    // lecture_4::test_functor();
+    lecture_4::test_vector();
 }
