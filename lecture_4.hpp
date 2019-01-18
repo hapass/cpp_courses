@@ -36,7 +36,7 @@ namespace lecture_4 {
 
     template<class T>
     struct cube {
-        void operator()(T x) const {
+        void operator()(T& x) const {
             std::cout << x * x * x << std::endl;
         }
     };

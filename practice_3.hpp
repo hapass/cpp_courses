@@ -45,17 +45,16 @@ namespace practice_3
         Float
     };
 
+    class MatrixFactory;
+
     class Matrix {
         public:
             const int rows;
             const int columns;
 
-            Matrix(int rows, int columns);
-
             MatrixType type();
 
             float element(int row, int column) const;
-            void element(int row, int column, float value);
 
             std::vector<float> row(int row) const;
             std::vector<float> column(int column) const;
@@ -68,10 +67,15 @@ namespace practice_3
 
             Matrix negate() const;
             Matrix transpose() const;
+
+            friend class MatrixFactory;
         private:
             MatrixType matrixType;
             std::vector<float> matrix;
 
+            Matrix(int rows, int columns);
+
+            void element(int row, int column, float value);
             float dot(std::vector<float> first, std::vector<float> second) const;
     };
 
@@ -255,7 +259,7 @@ namespace practice_3
             default: ch = '*'; break;
         }
         return ch;
-    } 
+    }
 
     void test_1() {
         std::ifstream matrixFile;

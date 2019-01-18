@@ -36,5 +36,5 @@ int main() {
     // lecture_4::test_reinterpret();
     // lecture_4::test_functor();
     // lecture_4::test_stl_functor();
-    lecture_4::test_template_functor();
+    // lecture_4::test_template_functor();
 }
