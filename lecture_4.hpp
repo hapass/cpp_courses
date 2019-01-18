@@ -23,14 +23,29 @@ namespace lecture_4 {
         std::cout << add_ten(1) << std::endl;
     }
 
-    struct mul {
+    struct square {
         void operator()(int x) const {
             std::cout << x * x << std::endl;
         }
     };
 
-    void test_vector() {
+    void test_stl_functor() {
         std::vector<int> vec { 1, 2, 3, 4, 5 };
-        std::for_each(vec.begin(), vec.end(), mul());
+        std::for_each(vec.begin(), vec.end(), square());
+    }
+
+    template<class T>
+    struct cube {
+        void operator()(T x) const {
+            std::cout << x * x * x << std::endl;
+        }
+    };
+
+    void test_template_functor() {
+        std::vector<int> vec { 1, 2, 3, 4, 5 };
+        std::for_each(vec.begin(), vec.end(), cube<int>());
+
+        std::vector<float> vecf { 1.1, 2.2, 3.3, 4.5, 5.6 };
+        std::for_each(vecf.begin(), vecf.end(), cube<float>());
     }
 }
