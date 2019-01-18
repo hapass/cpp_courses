@@ -12,7 +12,6 @@ class ProducerConsumerQueue {
     private:
         int size;
         std::mutex sync;
-        std::condition_variable put_event;
-        std::condition_variable get_event;
+        std::condition_variable cv;
         std::queue<T> queue;
 };
