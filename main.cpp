@@ -1,9 +1,9 @@
-#include "lecture_1.hpp"
-#include "lecture_2.hpp"
-#include "lecture_3.hpp"
-#include "practice_2.hpp"
-#include "practice_3.hpp"
-#include "lecture_4.hpp"
+// #include "lecture_1.hpp"
+// #include "lecture_2.hpp"
+// #include "lecture_3.hpp"
+// #include "practice_2.hpp"
+// #include "practice_3.hpp"
+// #include "lecture_4.hpp"
 
 int main() {
     // lecture_1::test_printf();
