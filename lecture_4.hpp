@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <algorithm>
 
 namespace lecture_4 {
     void test_reinterpret() {
@@ -47,5 +48,16 @@ namespace lecture_4 {
 
         std::vector<float> vecf { 1.1, 2.2, 3.3, 4.5, 5.6 };
         std::for_each(vecf.begin(), vecf.end(), cube<float>());
+    }
+
+    void fill_vector(std::vector<int>& v) {
+        static int n = 1;
+        std::generate(v.begin(), v.end(), []{ return n++; });
+    }
+
+    void test_lambda() {
+        std::vector<int> vec(20);
+        fill_vector(vec);
+        std::for_each(vec.begin(), vec.end(), [](int& i){ std::cout << i << std::endl; } );
     }
 }
