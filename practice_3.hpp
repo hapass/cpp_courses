@@ -6,7 +6,7 @@
 #include <assert.h>
 #include <math.h>
 
-namespace math
+namespace practice_3
 {
     class ValueValidator {
         public: virtual bool validate(float value) = 0;
