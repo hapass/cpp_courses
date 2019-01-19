@@ -1,7 +1,7 @@
 BINFOLDER = bin
 
 CXX = clang++
-CXXFLAGS = -std=c++17 -g
+CXXFLAGS = -std=c++11 -g
 
 main:
 	mkdir -p ${BINFOLDER}
