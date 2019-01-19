@@ -6,11 +6,11 @@ static ProducerConsumerQueue<std::vector<int>> main_context(2);
 
 void sort(std::vector<int> vec) {
     for(int i = 0; i < vec.size(); i++) {
-        for(int j = i + 1; j < vec.size(); j++) {
-            if(vec[j] < vec[i]) {
-                int temp = vec[i];
-                vec[i] = vec[j];
-                vec[j] = temp;
+        for(int j = 0; j < vec.size() - i - 1; j++) {
+            if(vec[j] > vec[j + 1]) {
+                int temp = vec[j];
+                vec[j] = vec[j+1];
+                vec[j+1] = temp;
                 main_context.Put(vec);
             }
         }
