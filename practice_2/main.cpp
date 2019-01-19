@@ -11,7 +11,7 @@ int left(int width, std::string word) {
     return width - center(width, word) - word.length();
 }
 
-void test_1() {
+void format_words() {
     std::ifstream words;
     words.open("words.txt");
 
@@ -49,12 +49,12 @@ std::ostream& operator<< (std::ostream& out, const Phone& phone) {
     return out;
 }
 
-void test_2() {
+void format_phone() {
     std::cout << Phone(29, 1234561) << std::endl;
 }
 
 template<class T>
-void test_3(std::vector<T> list) {
+void sum_vector(std::vector<T> list) {
     T sum = 0;
     for(auto i = list.begin(); i < list.end(); i++) {
         sum += *i;
@@ -62,7 +62,7 @@ void test_3(std::vector<T> list) {
     std::cout << sum << "\n";
 }
 
-void test_4() {
+void closest_city() {
     std::ifstream cities;
     cities.open("cities.txt");
     std::vector<std::pair<int, std::string>> list;
@@ -86,7 +86,7 @@ void test_4() {
     }
 }
 
-void test_5(std::vector<int> vec) {
+void remove_average(std::vector<int> vec) {
     int index = 1;
     while(index < vec.size() - 1) {
         int average = (vec[index - 1] + vec[index] + vec[index + 1]) / 3;
@@ -103,7 +103,7 @@ void test_5(std::vector<int> vec) {
     std::cout << "--------------------" << std::endl;
 }
 
-void test_6() {
+void revert_string() {
     std::string str;
     std::cin >> str;
     std::reverse(str.begin(), str.end());
@@ -111,21 +111,21 @@ void test_6() {
 }
 
 int main() {
-    test_1();
-    test_2();
+    format_words();
+    format_phone();
 
     std::vector<int> integers { 1, 2, 3, 4, 5 };
-    test_3(integers);
+    sum_vector(integers);
 
     std::vector<float> floats { 1.1, 2.2, 3.3, 4.4, 5.5 };
-    test_3(floats);
+    sum_vector(floats);
 
-    test_4();
+    closest_city();
 
-    test_5({ 1, 1000, 1, 1 });
-    test_5({ 1, 1000, 100, 2 });
-    test_5({ 1, 1, 1, 1000 });
-    test_5({ 1, 10, 100, 1000, 1 });
+    remove_average({ 1, 1000, 1, 1 });
+    remove_average({ 1, 1000, 100, 2 });
+    remove_average({ 1, 1, 1, 1000 });
+    remove_average({ 1, 10, 100, 1000, 1 });
 
-    test_6();
+    revert_string();
 }

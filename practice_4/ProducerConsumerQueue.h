@@ -7,8 +7,8 @@ template <class T>
 class ProducerConsumerQueue {
     public:
         ProducerConsumerQueue(int size);
-        void Put(T element);
-        T Get();
+        void put(T element);
+        T get();
     private:
         int size;
         std::mutex sync;

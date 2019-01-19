@@ -259,7 +259,6 @@ char matrix_char(MatrixType type) {
     return ch;
 }
 
-
 int main() {
     std::ifstream matrixFile;
     matrixFile.open("matrix.txt");

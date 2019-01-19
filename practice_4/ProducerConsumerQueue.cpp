@@ -5,7 +5,7 @@ template<class T>
 ProducerConsumerQueue<T>::ProducerConsumerQueue(int size): size(size) {}
 
 template<class T>
-void ProducerConsumerQueue<T>::Put(T element) {
+void ProducerConsumerQueue<T>::put(T element) {
     std::unique_lock<std::mutex> guard(sync);
     cv.wait(guard, [this](){ return queue.size() < size; });
     queue.push(element);
@@ -14,7 +14,7 @@ void ProducerConsumerQueue<T>::Put(T element) {
 }
 
 template<class T>
-T ProducerConsumerQueue<T>::Get() {
+T ProducerConsumerQueue<T>::get() {
     std::unique_lock<std::mutex> guard(sync);
     cv.wait(guard, [this](){ return queue.size() > 0; });
     auto value = queue.front();
