@@ -1,6 +1,9 @@
 #include <thread>
 #include <iostream>
+#include <chrono>
 #include "ProducerConsumerQueue.h"
+
+using namespace std::chrono_literals;
 
 static ProducerConsumerQueue<std::vector<int>> main_context(2);
 
@@ -11,6 +14,7 @@ void sort(std::vector<int> vec) {
                 int temp = vec[j];
                 vec[j] = vec[j + 1];
                 vec[j + 1] = temp;
+                std::this_thread::sleep_for(200ms);
                 main_context.put(vec);
             }
         }
