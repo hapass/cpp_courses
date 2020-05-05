@@ -31,7 +31,7 @@ int main() {
     {
         int minLength = 5;
         vector<string> words = {"abacaba", "aba"};
-        vector<string> output = PalindromeFilter(words, minLength);
+        vector<string> output = PalindromFilter(words, minLength);
         for (const string& word : output)
         {
             cout << word << endl;
@@ -41,7 +41,7 @@ int main() {
     {
         int minLength = 2;
         vector<string> words = { "abacaba", "aba" };
-        vector<string> output = PalindromeFilter(words, minLength);
+        vector<string> output = PalindromFilter(words, minLength);
         for (const string& word : output)
         {
             cout << word << endl;
@@ -51,7 +51,7 @@ int main() {
     {
         int minLength = 4;
         vector<string> words = { "weew", "bro", "code" };
-        vector<string> output = PalindromeFilter(words, minLength);
+        vector<string> output = PalindromFilter(words, minLength);
         for (const string& word : output)
         {
             cout << word << endl;
@@ -61,7 +61,7 @@ int main() {
     {
         int minLength = 0;
         vector<string> words = { "madam", "gentleman", "x", "abba", "" };
-        vector<string> output = PalindromeFilter(words, minLength);
+        vector<string> output = PalindromFilter(words, minLength);
         for (const string& word : output)
         {
             cout << word << endl;
