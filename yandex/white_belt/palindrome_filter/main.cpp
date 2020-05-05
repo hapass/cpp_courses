@@ -4,7 +4,7 @@
 
 using namespace std;
 
-vector<string> PalindromeFilter(vector<string> words, int minLength) {
+vector<string> PalindromFilter(vector<string> words, int minLength) {
     vector<string> result;
     for (const string& word : words) {
         if (word.size() < minLength) {
