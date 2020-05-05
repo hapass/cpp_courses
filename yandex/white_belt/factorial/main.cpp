@@ -2,17 +2,17 @@
 
 using namespace std;
 
-int factorial(int number) {
+int Factorial(int number) {
     if (number <= 0) {
         return 1;
     }
 
-    return number * factorial(number - 1);
+    return number * Factorial(number - 1);
 }
 
 int main() {
     int number = 0;
     cin >> number;
-    cout << factorial(number) << endl;
+    cout << Factorial(number) << endl;
     return 0;
 }
