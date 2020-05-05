@@ -4,7 +4,6 @@
 using namespace std;
 
 bool IsPalindrom(string value) {
-    cout << value << endl;
     if (value.length() <= 1) {
         return true;
     }
