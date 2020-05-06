@@ -3,7 +3,7 @@
 
 using namespace std;
 
-map<char, int> BuildCharCounters(string word) {
+map<char, int> BuildCharCounters(const string& word) {
     map<char, int> chars;
     for (char ch : word) {
         ++chars[ch];
