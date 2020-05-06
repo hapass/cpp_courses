@@ -5,7 +5,10 @@ cat ../test.txt | ./main > out.txt
 
 cmp "out.txt" "../verify.txt";
 
-#print comparison status
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
+
 status=$?
 if [[ $status = 0 ]]; then
     echo "${green}Test passed.${reset}"
