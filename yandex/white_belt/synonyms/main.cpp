@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <set>
+#include <map>
 
 using namespace std;
 
@@ -9,6 +10,7 @@ int main() {
     cin >> commandsCount;
 
     set<set<string>> synonyms;
+    map<string, int> synonymCounts;
     while (--commandsCount >= 0)
     {
         string command;
@@ -17,20 +19,19 @@ int main() {
         if (command == "ADD") {
             string firstWord, secondWord;
             cin >> firstWord >> secondWord;
-            synonyms.insert({ firstWord, secondWord });
+            set<string> words = { firstWord, secondWord };
+            if (synonyms.count(words) == 0) {
+                synonyms.insert(words);
+                synonymCounts[firstWord]++;
+                synonymCounts[secondWord]++;
+            }
             continue;
         }
 
         if (command == "COUNT") {
             string word;
             cin >> word;
-            int count = 0;
-            for (const auto& pair : synonyms) {
-                if (pair.count(word) == 1) {
-                    count++;
-                }
-            }
-            cout << count << endl;
+            cout << synonymCounts[word] << endl;
             continue;
         }
 
