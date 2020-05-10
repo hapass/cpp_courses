@@ -7,11 +7,11 @@ using namespace std;
 
 class Person {
 public:
-    Person(const string& first_name, const string& last_name, int year): birth_year(year) {
+    Person(const string& first_name, const string& last_name, int year) {
         ChangeFirstName(year, first_name);
         ChangeLastName(year, last_name);
-
     }
+
     void ChangeFirstName(int year, const string& first_name) {
         first_name_history[year] = first_name;
     }
@@ -90,7 +90,6 @@ private:
 
     map<int, string> first_name_history;
     map<int, string> last_name_history;
-    int birth_year;
 };
 
 int main() {
