@@ -7,7 +7,7 @@ using namespace std;
 class ReversibleString {
 public:
     ReversibleString() {}
-    ReversibleString(string value): current_string(value) {}
+    ReversibleString(const string& value): current_string(value) {}
 
     void Reverse() {
         for (int i = 0; i < current_string.size() / 2; i++) {
