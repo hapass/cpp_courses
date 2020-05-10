@@ -20,10 +20,10 @@ struct Week {
 };
 
 struct LectureTitle {
-  Specialization specialization;
-  Course course;
-  Week week;
-  LectureTitle(Specialization s, Course c, Week w): specialization(s), course(c), week(w) {}
+  string specialization;
+  string course;
+  string week;
+  LectureTitle(Specialization s, Course c, Week w): specialization(s.value), course(c.value), week(w.value) {}
 };
 
 int main() {
