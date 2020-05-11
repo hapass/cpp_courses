@@ -6,8 +6,9 @@ using namespace std;
 
 int main() {
     ifstream input("input.txt");
-    double a, b, c;
-    input >> a >> b >> c;
-    cout << fixed << setprecision(3) << a << endl << b << endl << c << endl;
+    cout << fixed << setprecision(3);
+    double num;
+    while(input >> num) 
+        cout << num << endl;
     return 0;
 }
