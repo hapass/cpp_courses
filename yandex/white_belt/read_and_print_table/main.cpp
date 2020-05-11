@@ -11,7 +11,6 @@ int main() {
     int num;
     while(input >> num) {
         input.ignore(1);
-        cout << num << endl;
         table.push_back(num);
     }
 
