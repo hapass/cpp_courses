@@ -34,7 +34,11 @@ int main() {
         int student_id;
         if (cin >> command && cin >> student_id) {
             int i = student_id - 1;
-            if (command == "name") {
+
+            if (!(0 <= i && i < students.size())) {
+                cout << "bad request" << endl;
+            }
+            else if (command == "name") {
                 cout << students[i].name << " " << students[i].last_name << endl;
             }
             else if (command == "date") {
