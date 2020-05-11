@@ -1,3 +1,3 @@
 make
 cd bin
-./main
+cat "input.txt" | ./main

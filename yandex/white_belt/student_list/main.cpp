@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <string>
 
@@ -14,28 +13,26 @@ struct Student {
 };
 
 int main() {
-    ifstream input("input.txt");
-    
     int student_count = 0;
-    input >> student_count;
+    cin >> student_count;
 
     vector<Student> students(student_count);
 
     for (Student& s : students) {
-        input >> s.name;
-        input >> s.last_name;
-        input >> s.day;
-        input >> s.month;
-        input >> s.year;
+        cin >> s.name;
+        cin >> s.last_name;
+        cin >> s.day;
+        cin >> s.month;
+        cin >> s.year;
     }
 
     int command_count = 0;
-    input >> command_count;
+    cin >> command_count;
 
     while (--command_count >= 0) {
         string command;
         int student_id;
-        if (input >> command && input >> student_id) {
+        if (cin >> command && cin >> student_id) {
             int i = student_id - 1;
             if (command == "name") {
                 cout << students[i].name << " " << students[i].last_name << endl;
