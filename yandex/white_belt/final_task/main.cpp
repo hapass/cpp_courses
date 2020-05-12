@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <map>
+#include <vector>
 #include <set>
 #include <exception>
 #include <iomanip>
@@ -43,18 +44,56 @@ bool operator<(const Date& lhs, const Date& rhs) {
     }
 }
 
+bool IsDigit(char ch) {
+    return 48 <= ch && ch <= 57;
+}
+
+bool MatchNumber(int& out, int& i, const string& str) {
+    stringstream result;
+
+    if (str[i] == '-') {
+        result << str[i];
+        i++;
+    }
+
+    if (str[i] == '+') {
+        i++;
+    }
+
+    while(i < str.size() && IsDigit(str[i])) {
+        result << str[i];
+        i++;
+    }
+
+    return bool(result >> out);
+}
+
+bool SkipDelimiter(int& i, const string& str) {
+    if (i < str.size() && str[i] == '-') {
+        i++;
+        return true;
+    }
+    return false;
+}
+
+bool MatchEnd(int& i, const string& str) {
+    return i >= str.size();
+}
+
 istream& operator>>(istream& stream, Date& date) {
     string input;
     stream >> input;
-    stringstream ss(input);
+
     int year, month, day;
-    if (ss >> year && 
-        ss.peek() == '-' && 
-        ss.ignore(1) && 
-        ss >> month && 
-        ss.peek() == '-' && 
-        ss.ignore(1) &&
-        ss >> day) {
+    int i = 0;
+    bool success = true;
+    success &= MatchNumber(year, i, input);
+    success &= SkipDelimiter(i, input);
+    success &= MatchNumber(month, i, input);
+    success &= SkipDelimiter(i, input);
+    success &= MatchNumber(day, i, input);
+    success &= MatchEnd(i, input);
+    if (success) {
         date = Date(year, month, day);
         return stream;
     }

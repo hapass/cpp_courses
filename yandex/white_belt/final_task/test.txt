@@ -1,9 +1,14 @@
-Add 0-1-2 event1
-Add 1-2-3 event2
+Add 1-1-1 event1
+Add -1-1-1 event2
+Add 1--1-1 event3
+Add 1---1-1 event4
+Add 1-+1-+1 event5
+Add 0-1-2 event6
+Add 1-2-3 event7
 Find 0-1-2
 
 Del 0-1-2
 Print
-Del 1-2-3 event2
-Del 1-2-3 event2
+Del 1-2-3 event7
+Del 1-2-3 event6
 Add 0-13-32 event1

@@ -1,6 +1,11 @@
-event1
+Month value is invalid: -1
+Wrong date format: 1---1-1
+event6
 Deleted 1 events
-0001-02-03 event2
+00-1-01-01 event2
+0001-01-01 event1
+0001-01-01 event5
+0001-02-03 event7
 Deleted successfully
 Event not found
 Month value is invalid: 13
