@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cassert>
 #include <cmath>
 
 using namespace std;
@@ -20,7 +19,6 @@ class Rational {
 public:
     Rational() {}
     Rational(int n, int d) {
-        assert(d != 0);
         sign = Sign(n, d);
         numerator = abs(n);
         denominator = abs(d);
