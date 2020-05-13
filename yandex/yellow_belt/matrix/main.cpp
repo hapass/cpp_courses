@@ -49,7 +49,7 @@ istream& operator>>(istream& stream, Matrix& matrix) {
     matrix.Reset(m, n);
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
-            cin >> matrix.At(i, j);
+            stream >> matrix.At(i, j);
         }
     }
     return stream;
