@@ -37,6 +37,7 @@ public:
 
     int GetNumRows() const { return rows; }
     int GetNumColumns() const { return columns; }
+    bool IsEmpty() const { return data.size() == 0; }
 private:
     vector<int> data;
     int rows = 0;
@@ -72,6 +73,7 @@ ostream& operator<<(ostream& stream, const Matrix& matrix) {
 }
 
 bool operator==(const Matrix& lhs, const Matrix& rhs) {
+    if (lhs.IsEmpty() && rhs.IsEmpty()) return true;
     if (lhs.GetNumColumns() != rhs.GetNumColumns()) return false;
     if (lhs.GetNumRows() != rhs.GetNumRows()) return false;
     for (int i = 0; i < lhs.GetNumRows(); i++) {
@@ -85,6 +87,7 @@ bool operator==(const Matrix& lhs, const Matrix& rhs) {
 }
 
 Matrix operator+(const Matrix& lhs, const Matrix& rhs) {
+    if (lhs.IsEmpty() && rhs.IsEmpty()) return {};
     if (lhs.GetNumColumns() != rhs.GetNumColumns()) throw invalid_argument("different column sizes");
     if (lhs.GetNumRows() != rhs.GetNumRows()) throw invalid_argument("different row sizes");
 
@@ -98,8 +101,9 @@ Matrix operator+(const Matrix& lhs, const Matrix& rhs) {
 }
 
 int main() {
-    Matrix one;
-    Matrix two;
+    Matrix one(1, 1);
+    Matrix two(1, 1);
+    Matrix three(1, 1);
 
     cin >> one >> two;
     cout << one + two << endl;
