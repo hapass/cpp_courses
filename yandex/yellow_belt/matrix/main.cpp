@@ -22,15 +22,15 @@ public:
     }
 
     int At(int row, int column) const {
-        if (row >= rows) throw out_of_range("invalid row");
-        if (column >= columns) throw out_of_range("invalid column");
+        if (row >= rows || row < 0) throw out_of_range("invalid row");
+        if (column >= columns || column < 0) throw out_of_range("invalid column");
 
         return data.at(row * columns + column);
     }
 
     int& At(int row, int column) {
-        if (row >= rows) throw out_of_range("invalid row");
-        if (column >= columns) throw out_of_range("invalid column");
+        if (row >= rows || row < 0) throw out_of_range("invalid row");
+        if (column >= columns || column < 0) throw out_of_range("invalid column");
 
         return data.at(row * columns + column);
     }
@@ -98,10 +98,11 @@ Matrix operator+(const Matrix& lhs, const Matrix& rhs) {
 }
 
 int main() {
-  Matrix one;
-  Matrix two;
+    Matrix one;
+    Matrix two;
 
-  cin >> one >> two;
-  cout << one + two << endl;
-  return 0;
+    cin >> one >> two;
+    cout << one + two << endl;
+
+    return 0;
 }
