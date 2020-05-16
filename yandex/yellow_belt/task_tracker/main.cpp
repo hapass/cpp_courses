@@ -34,23 +34,19 @@ public:
         TasksInfo& untouched_tasks = get<1>(result);
         int status_count = static_cast<int>(TaskStatus::DONE) + 1;
         int updated_task_count = 0;
-        for (int i = 0; i < status_count - 1; i++) {
+        for (int i = 0; i < status_count; i++) {
             TaskStatus current_status = static_cast<TaskStatus>(i);
-            //cout << "Status: " << i << std::endl;
+            if (i == (status_count - 1)) task_count = 0;
             if (updated_task_count > 0) updated_tasks[current_status] = updated_task_count;
 
             int current_task_count = current_tasks[current_status];
             current_tasks[current_status] = updated_task_count;
-            //cout << "Task count: " << current_task_count << std::endl;
             updated_task_count = min(current_task_count, task_count);
-            //cout << "Updated count: " << updated_task_count << std::endl;
             task_count -= updated_task_count;
-            //cout << "Remaining count: " << task_count << std::endl;
 
             int untouched_task_count = current_task_count - updated_task_count;
-            //cout << "Untouched count: " << untouched_task_count << std::endl;
             if (untouched_task_count > 0) {
-                untouched_tasks[current_status] = untouched_task_count;
+                if (i != (status_count - 1)) untouched_tasks[current_status] = untouched_task_count;
                 current_tasks[current_status] += untouched_task_count;
             }
 
