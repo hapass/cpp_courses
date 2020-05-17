@@ -22,20 +22,20 @@ struct Query {
 
 istream& operator >> (istream& is, Query& q) {
     string code;
-    cin >> code;
+    is >> code;
     if (code == "NEW_BUS") {
         q.type = QueryType::NewBus;
-        cin >> q.bus;
+        is >> q.bus;
         int stop_count;
-        cin >> stop_count;
+        is >> stop_count;
         q.stops.resize(stop_count);
-        for (string& stop : q.stops) cin >> stop;
+        for (string& stop : q.stops) is >> stop;
     } else if (code == "BUSES_FOR_STOP") {
         q.type = QueryType::BusesForStop;
-        cin >> q.stop;
+        is >> q.stop;
     } else if (code == "STOPS_FOR_BUS") {
         q.type = QueryType::StopsForBus;
-        cin >> q.bus;
+        is >> q.bus;
     } else if (code == "ALL_BUSES") {
         q.type = QueryType::AllBuses;
     }
