@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm>
+#include <random>
+#include <chrono>
 
 using namespace std;
 
@@ -101,9 +104,28 @@ bool IsPalindrom(const string& s) {
 
 void TestAllSymbolsPalindrome() {
   ostringstream oss;
-  for (int i = 32; i <= 126; i++) oss << static_cast<char>(i);
-  for (int i = 126; i >= 32; i--) oss << static_cast<char>(i);
-  Assert(IsPalindrom(oss.str()), "all character palindrome");
+  vector<char> ascii;
+
+  for (int i = 32; i <= 126; i++) ascii.push_back(static_cast<char>(i));
+
+  std::random_device rd;
+  std::mt19937 g(rd());
+  for (int i = 0; i < 20; i++) {
+    shuffle(ascii.begin(), ascii.end(), g);
+
+    oss.str("");
+    int size = static_cast<int>(ascii.size());
+    for (int j = 0; j < size; j++) oss << ascii[j];
+    for (int j = size - 1; j >= 0; j--) oss << ascii[j];
+
+    Assert(IsPalindrom(oss.str()), "all character palindrome");
+  }
+}
+
+void TestSpacePalindrome() {
+  Assert(IsPalindrom(" "), "space is a palindrome");
+  Assert(IsPalindrom("a a"), "space is a palindrome");
+  Assert(IsPalindrom(" a b a "), "space is a palindrome");
 }
 
 void TestEmptyStringPalindrome() {
@@ -122,12 +144,11 @@ void TestSimpleEvenCharacterNumberPalindrome() {
   Assert(IsPalindrom("abba"), "even character palindrome");
 }
 
-void TestAllCharactersButLastPalindrome() {
-  Assert(!IsPalindrom("zabbax"), "palindrome for all characters but last");
-}
-
-void TestAllCharactersButInsidePalindrome() {
-  Assert(!IsPalindrom("ragnar"), "palindrome for all characters but inside");
+void TestAllCharactersAreComparedInPalindrome() {
+  Assert(!IsPalindrom("zdabtbadx"), "0");
+  Assert(!IsPalindrom("xfabtbadx"), "1");
+  Assert(!IsPalindrom("xdrbtbadx"), "2");
+  Assert(!IsPalindrom("xdantbadx"), "3");
 }
 
 void TestNotAPalindrome() {
@@ -137,12 +158,12 @@ void TestNotAPalindrome() {
 int main() {
   TestRunner runner;
   runner.RunTest(TestAllSymbolsPalindrome, "TestAllSymbolsPalindrome");
+  runner.RunTest(TestSpacePalindrome, "TestSpacePalindrome");
   runner.RunTest(TestEmptyStringPalindrome, "TestEmptyStringPalindrome");
   runner.RunTest(TestSingleCharacterPalindrome, "TestSingleCharacterPalindrome");
   runner.RunTest(TestSimpleOddCharacterNumberPalindrome, "TestSimpleOddCharacterNumberPalindrome");
   runner.RunTest(TestSimpleEvenCharacterNumberPalindrome, "TestSimpleEvenCharacterNumberPalindrome");
-  runner.RunTest(TestAllCharactersButLastPalindrome, "TestAllCharactersButLastPalindrome");
-  runner.RunTest(TestAllCharactersButInsidePalindrome, "TestAllCharactersButInsidePalindrome");
+  runner.RunTest(TestAllCharactersAreComparedInPalindrome, "TestAllCharactersAreComparedInPalindrome");
   runner.RunTest(TestNotAPalindrome, "TestNotAPalindrome");
   return 0;
 }
