@@ -122,9 +122,19 @@ void TestSimpleSquare() {
     AssertEqual(roots_count, 2, "a: 1, b: 0, c: -4");
 }
 
+void TestSimpleSquareNegative() {
+    int roots_count = GetDistinctRealRootCount(1, 0, 4);
+    AssertEqual(roots_count, 0, "a: 1, b: 0, c: 4");
+}
+
 void TestNegativeQuotients() {
     int roots_count = GetDistinctRealRootCount(-1, -2, -1);
     AssertEqual(roots_count, 1, "a: -1, b: -2, c: -1");
+}
+
+void TestNoRoots() {
+    int roots_count = GetDistinctRealRootCount(0, 0, 1);
+    AssertEqual(roots_count, 0, "a: 0, b: 0, c: 1");
 }
 
 int main() {
@@ -135,5 +145,6 @@ int main() {
   runner.RunTest(TestLinearEquation, "TestLinearEquation");
   runner.RunTest(TestSimpleSquare, "TestSimpleSquare");
   runner.RunTest(TestNegativeQuotients, "TestNegativeQuotients");
+  runner.RunTest(TestNoRoots, "TestNoRoots");
   return 0;
 }
