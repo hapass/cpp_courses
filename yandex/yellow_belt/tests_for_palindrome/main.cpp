@@ -98,12 +98,16 @@ private:
 };
 
 bool IsPalindrom(const string& s) {
-    if (s.length() <= 1) return true;
-    return s[0] == s[s.length() - 1] && IsPalindrom(s.substr(1, s.length() - 2));
+  int size = static_cast<int>(s.size());
+  for (int i = 0; i < size / 2 ; i++) {
+    if (s[i] != s[size - 1 - i]) return false;
+  }
+  return true;
 }
 
 void TestAllSymbolsPalindrome() {
-  ostringstream oss;
+  ostringstream palindrome_stream;
+  ostringstream stream;
   vector<char> ascii;
 
   for (int i = 32; i <= 126; i++) ascii.push_back(static_cast<char>(i));
@@ -113,19 +117,30 @@ void TestAllSymbolsPalindrome() {
   for (int i = 0; i < 20; i++) {
     shuffle(ascii.begin(), ascii.end(), g);
 
-    oss.str("");
+    palindrome_stream.str("");
     int size = static_cast<int>(ascii.size());
-    for (int j = 0; j < size; j++) oss << ascii[j];
-    for (int j = size - 1; j >= 0; j--) oss << ascii[j];
+    for (int j = 0; j < size; j++) palindrome_stream << ascii[j];
+    for (int j = 0; j < size; j++) stream << ascii[j];
+    for (int j = size - 1; j >= 0; j--) palindrome_stream << ascii[j];
 
-    Assert(IsPalindrom(oss.str()), "random string is palindrome");
+    Assert(IsPalindrom(palindrome_stream.str()), "random string is palindrome");
+    Assert(!IsPalindrom(stream.str()), "random string is not palindrome");
   }
 }
 
 void TestSpacePalindrome() {
   Assert(IsPalindrom(" "), " is a palindrome");
+  Assert(IsPalindrom("!"), "! is a palindrome");
+  Assert(IsPalindrom("!!"), "!! is a palindrome");
+  Assert(!IsPalindrom("!*"), "!* is not a palindrome");
+  Assert(IsPalindrom("\n"), "\n is a palindrome");
+  Assert(IsPalindrom("\n\n"), "\n\n is a palindrome");
+  Assert(IsPalindrom("\n\n\n"), "\n\n\n is a palindrome");
+  Assert(!IsPalindrom("1\n\n"), "1\n\n is not a palindrome");
   Assert(IsPalindrom("a a"), "a a is a palindrome");
   Assert(IsPalindrom(" a b a "), " a b a  is a palindrome");
+  Assert(IsPalindrom(" a  b  a "), " a b a  is a palindrome");
+  Assert(!IsPalindrom(" a! b  a "), " a b a  is a palindrome");
 }
 
 void TestRepeatingCharacterPalindrome() {
@@ -151,6 +166,8 @@ void TestSimpleEvenCharacterNumberPalindrome() {
 
 void TestAllCharactersAreComparedInPalindrome() {
   Assert(!IsPalindrom("zdabtbadx"), "zdabtbadx is not a palindrome");
+  Assert(!IsPalindrom("zdabtbad"), "zdabtbad is not a palindrome");
+  Assert(!IsPalindrom("dabtbadx"), "dabtbadx is not a palindrome");
   Assert(!IsPalindrom("xfabtbadx"), "xfabtbadx is not a palindrome");
   Assert(!IsPalindrom("xdrbtbadx"), "xdrbtbadx is not a palindrome");
   Assert(!IsPalindrom("xdantbadx"), "xdantbadx is not a palindrome");
