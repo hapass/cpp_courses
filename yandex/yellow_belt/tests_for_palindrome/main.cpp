@@ -140,7 +140,9 @@ void TestSpacePalindrome() {
   Assert(IsPalindrom("a a"), "a a is a palindrome");
   Assert(IsPalindrom(" a b a "), " a b a  is a palindrome");
   Assert(IsPalindrom(" a  b  a "), " a b a  is a palindrome");
-  Assert(!IsPalindrom(" a! b  a "), " a b a  is a palindrome");
+  Assert(!IsPalindrom(" a! b  a "), " a! b  a  is not a palindrome");
+  Assert(!IsPalindrom("aba    "), "aba     is not a palindrome");
+  Assert(!IsPalindrom("\n\n\naba    "), "\n\n\naba     is not a palindrome");
 }
 
 void TestRepeatingCharacterPalindrome() {
