@@ -94,9 +94,9 @@ private:
   int fail_count = 0;
 };
 
-bool IsPalindrom(string value) {
-    if (value.length() <= 1) return true;
-    return value[0] == value[value.length() - 1] && IsPalindrom(value.substr(1, value.length() - 2));
+bool IsPalindrom(const string& s) {
+    if (s.length() <= 1) return true;
+    return s[0] == s[s.length() - 1] && IsPalindrom(s.substr(1, s.length() - 2));
 }
 
 void TestAllSymbolsPalindrome() {
