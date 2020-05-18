@@ -118,14 +118,19 @@ void TestAllSymbolsPalindrome() {
     for (int j = 0; j < size; j++) oss << ascii[j];
     for (int j = size - 1; j >= 0; j--) oss << ascii[j];
 
-    Assert(IsPalindrom(oss.str()), "all character palindrome");
+    Assert(IsPalindrom(oss.str()), "random string is palindrome");
   }
 }
 
 void TestSpacePalindrome() {
-  Assert(IsPalindrom(" "), "space is a palindrome");
-  Assert(IsPalindrom("a a"), "space is a palindrome");
-  Assert(IsPalindrom(" a b a "), "space is a palindrome");
+  Assert(IsPalindrom(" "), " is a palindrome");
+  Assert(IsPalindrom("a a"), "a a is a palindrome");
+  Assert(IsPalindrom(" a b a "), " a b a  is a palindrome");
+}
+
+void TestRepeatingCharacterPalindrome() {
+  Assert(IsPalindrom("aaaaa"), "aaaaa is a palindrome");
+  Assert(IsPalindrom("bbbbbb"), "bbbbbb is a palindrome");
 }
 
 void TestEmptyStringPalindrome() {
@@ -145,19 +150,20 @@ void TestSimpleEvenCharacterNumberPalindrome() {
 }
 
 void TestAllCharactersAreComparedInPalindrome() {
-  Assert(!IsPalindrom("zdabtbadx"), "0");
-  Assert(!IsPalindrom("xfabtbadx"), "1");
-  Assert(!IsPalindrom("xdrbtbadx"), "2");
-  Assert(!IsPalindrom("xdantbadx"), "3");
+  Assert(!IsPalindrom("zdabtbadx"), "zdabtbadx is not a palindrome");
+  Assert(!IsPalindrom("xfabtbadx"), "xfabtbadx is not a palindrome");
+  Assert(!IsPalindrom("xdrbtbadx"), "xdrbtbadx is not a palindrome");
+  Assert(!IsPalindrom("xdantbadx"), "xdantbadx is not a palindrome");
 }
 
 void TestNotAPalindrome() {
-  Assert(!IsPalindrom("abcdefg"), "not a palindrome");
+  Assert(!IsPalindrom("abcdefg"), "abcdefg is not a palindrome");
 }
 
 int main() {
   TestRunner runner;
   runner.RunTest(TestAllSymbolsPalindrome, "TestAllSymbolsPalindrome");
+  runner.RunTest(TestRepeatingCharacterPalindrome, "TestRepeatingCharacterPalindrome");
   runner.RunTest(TestSpacePalindrome, "TestSpacePalindrome");
   runner.RunTest(TestEmptyStringPalindrome, "TestEmptyStringPalindrome");
   runner.RunTest(TestSingleCharacterPalindrome, "TestSingleCharacterPalindrome");
