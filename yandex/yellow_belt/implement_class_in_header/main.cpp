@@ -24,15 +24,12 @@ void TestPhoneNumberThrows(const string& number) {
 void TestPhoneNumberPositives() {
     TestPhoneNumberPositive("+7-495-111-22-33", "7", "495", "111-22-33");
     TestPhoneNumberPositive("+a-495-111-22-33", "a", "495", "111-22-33");
-    TestPhoneNumberPositive("+-7-495-111-22-33", "", "7", "495-111-22-33");
-    TestPhoneNumberPositive("+7--111-22-33", "7", "", "111-22-33");
     TestPhoneNumberPositive("+7+495-111-22-33", "7+495", "111", "22-33");
     TestPhoneNumberPositive("+7-abc-111-22-33", "7", "abc", "111-22-33");
     TestPhoneNumberPositive("+abc-495-111-22-33", "abc", "495", "111-22-33");
     TestPhoneNumberPositive("+7-495-1112233", "7", "495", "1112233");
     TestPhoneNumberPositive("+323-22-460002", "323", "22", "460002");
     TestPhoneNumberPositive("+1-2-coursera-cpp", "1", "2", "coursera-cpp");
-    TestPhoneNumberPositive("+7-1233-", "7", "1233", "");
 }
 
 void TestPhoneNumberNegatives() {
@@ -41,6 +38,9 @@ void TestPhoneNumberNegatives() {
     TestPhoneNumberThrows("+1-");
     TestPhoneNumberThrows("+7-1233");
     TestPhoneNumberThrows("1-2-333");
+    TestPhoneNumberThrows("+-7-495-111-22-33");
+    TestPhoneNumberThrows("+7--111-22-33");
+    TestPhoneNumberThrows("+7-1233-");
 }
 
 int main() {

@@ -13,6 +13,7 @@ PhoneNumber::PhoneNumber(const string &international_number) {
     }
 
     country_code_ = country_code_stream.str();
+    if (country_code_ == "") throw invalid_argument("country code is empty");
 
     if (i == international_number.size()) throw invalid_argument("no city code");
     if (international_number[i++] != '-') throw invalid_argument("city code must start with -");
@@ -24,6 +25,7 @@ PhoneNumber::PhoneNumber(const string &international_number) {
     }
 
     city_code_ = city_code_stream.str();
+    if (city_code_ == "") throw invalid_argument("city code is empty");
 
     if (i == international_number.size()) throw invalid_argument("no local number");
     if (international_number[i++] != '-') throw invalid_argument("local number must start with -");
@@ -35,6 +37,7 @@ PhoneNumber::PhoneNumber(const string &international_number) {
     }
 
     local_number_ = local_number_stream.str();
+    if (local_number_ == "") throw invalid_argument("local number is empty");
 }
 
 string PhoneNumber::GetCountryCode() const { return country_code_; }
