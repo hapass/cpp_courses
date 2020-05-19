@@ -2,27 +2,39 @@
 #include <sstream>
 
 PhoneNumber::PhoneNumber(const string &international_number) {
-    ostringstream oss;
-    istringstream iss(international_number);
+    int i = 0;
+    if (i == international_number.size()) throw invalid_argument("empty string");
+    if (international_number[i++] != '+') throw invalid_argument("country code must start with +");
 
-    iss.ignore(1);
+    ostringstream country_code_stream;
+    while (i < international_number.size() && international_number[i] != '-') {
+        country_code_stream << international_number[i];
+        i++;
+    }
 
-    uint32_t country_code;
-    iss >> country_code;
-    oss << country_code;
-    country_code_ = oss.str();
+    country_code_ = country_code_stream.str();
 
-    iss.ignore(1);
+    if (i == international_number.size()) throw invalid_argument("no city code");
+    if (international_number[i++] != '-') throw invalid_argument("city code must start with -");
 
-    uint32_t city_code;
-    iss >> city_code;
-    oss.str("");
-    oss << city_code;
-    city_code_ = oss.str();
+    ostringstream city_code_stream;
+    while (i < international_number.size() && international_number[i] != '-') {
+        city_code_stream << international_number[i];
+        i++;
+    }
 
-    iss.ignore(1);
+    city_code_ = city_code_stream.str();
 
-    iss >> local_number_;
+    if (i == international_number.size()) throw invalid_argument("no local number");
+    if (international_number[i++] != '-') throw invalid_argument("local number must start with -");
+
+    ostringstream local_number_stream;
+    while (i < international_number.size()) {
+        local_number_stream << international_number[i];
+        i++;
+    }
+
+    local_number_ = local_number_stream.str();
 }
 
 string PhoneNumber::GetCountryCode() const { return country_code_; }
