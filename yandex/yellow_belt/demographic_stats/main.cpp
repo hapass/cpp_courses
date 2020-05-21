@@ -38,22 +38,22 @@ void PrintStats(vector<Person> persons) {
         return p.gender == Gender::FEMALE;
     });
 
-    cout << "Median age for females " << ComputeMedianAge(persons.begin(), gb) << endl;
-    cout << "Median age for males " << ComputeMedianAge(gb, persons.end()) << endl;
+    cout << "Median age for females = " << ComputeMedianAge(persons.begin(), gb) << endl;
+    cout << "Median age for males = " << ComputeMedianAge(gb, persons.end()) << endl;
 
     auto feb = partition(persons.begin(), gb, [](const Person& p) {
         return p.is_employed;
     });
 
-    cout << "Median age for employed females " << ComputeMedianAge(persons.begin(), feb) << endl;
-    cout << "Median age for unemployed females " << ComputeMedianAge(feb, gb) << endl;
+    cout << "Median age for employed females = " << ComputeMedianAge(persons.begin(), feb) << endl;
+    cout << "Median age for unemployed females = " << ComputeMedianAge(feb, gb) << endl;
 
     auto meb = partition(gb, persons.end(), [](const Person& p) {
         return p.is_employed;
     });
 
-    cout << "Median age for employed males " << ComputeMedianAge(gb, meb) << endl;
-    cout << "Median age for unemployed males " << ComputeMedianAge(meb, persons.end()) << endl;
+    cout << "Median age for employed males = " << ComputeMedianAge(gb, meb) << endl;
+    cout << "Median age for unemployed males = " << ComputeMedianAge(meb, persons.end()) << endl;
 }
 
 int main() {
