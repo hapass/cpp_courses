@@ -14,27 +14,20 @@ ostream& operator<<(ostream& stream, stack<string> stack) {
 }
 
 string parse_expression(stack<string>& stack) {
-    cout << "stack: " << stack << endl;
-    if (stack.empty()) {
-        cout << "is empty" << endl;
-        return "";
-    }
-
+    if (stack.empty()) return "";
     if (stack.top() == "+" || 
         stack.top() == "-" ||
         stack.top() == "*" ||
         stack.top() == "/") {
         string op = stack.top();
         stack.pop();
-        cout << "removed: " << op << endl;
         string rhs = parse_expression(stack);
         string lhs = parse_expression(stack);
-        return "(" + lhs + op + rhs + ")";
+        return "(" + lhs + ") " + op + " " + rhs;
     } else {
         string value = stack.top();
         stack.pop();
-        cout << "removed: " << value << endl;
-        return "(" + value + ")";
+        return value;
     }
 }
 
