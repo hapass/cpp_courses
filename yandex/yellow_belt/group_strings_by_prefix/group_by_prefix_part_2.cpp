@@ -11,26 +11,15 @@ pair<RandomIt, RandomIt> FindStartsWith(RandomIt range_begin, RandomIt range_end
     string ss(index + 1, prefix);
     return equal_range(range_begin, range_end, ss, [index](const string& lhs, const string& rhs) {
         if (index >= lhs.size()) return true;
-        //cout << "compare: " << "'" << lhs << "'" << " with " << "'" << rhs << "'" << endl;
         return lhs[index] < rhs[index];
     });
 }
 
 template <typename RandomIt>
 pair<RandomIt, RandomIt> FindStartsWith(RandomIt range_begin, RandomIt range_end, const string& prefix) {
-    //cout << "find prefix: " << prefix << endl;
     pair<RandomIt, RandomIt> result = { range_begin, range_end };
     for (int i = 0; i < prefix.size(); i++) {
         result = FindStartsWith(result.first, result.second, prefix[i], i);
-        // string from = "begin";
-        // string to = "end";
-        // if (result.first != range_end) {
-        //     from = *result.first;
-        // }
-        // if (result.second != range_begin) {
-        //     to = *prev(result.second);
-        // }
-        // cout << "find ch: " << prefix[i] << " [" << from << ", " << to << ")" << endl;
     }
     return result;
 }
