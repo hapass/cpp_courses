@@ -11,7 +11,7 @@ public:
 
 class Dog : public Animal {
 public:
-    Dog (const string name) : Animal(name) {}
+    Dog (const string& name) : Animal(name) {}
     void Bark() {
         cout << Name << " barks: woof!" << endl;
     }
