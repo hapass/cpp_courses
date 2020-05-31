@@ -8,10 +8,6 @@ class Walker {
 public:
     Walker(const string& name, const string& type): Name(name), Type(type) {}
 
-    void Announce() const {
-        cout << Type << ": " << Name;
-    }
-
     virtual void Walk(const string& destination) const {
         Announce();
         cout << " walks to: " << destination << endl;
@@ -21,6 +17,10 @@ public:
 
     const string Name;
     const string Type;
+protected:
+    void Announce() const {
+        cout << Type << ": " << Name;
+    }
 };
 
 class Student: public Walker {
@@ -53,7 +53,6 @@ public:
         Announce();
         cout << " teaches: " << Subject << endl;
     }
-
 private:
     const string Subject;
 };
