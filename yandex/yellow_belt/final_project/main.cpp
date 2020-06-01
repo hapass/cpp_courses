@@ -12,6 +12,7 @@ using namespace std;
 string ParseEvent(istream &is)
 {
     string result;
+    while (is.peek() == ' ') is.ignore();
     if (!getline(is, result, '\n')) throw invalid_argument("stream doesn't contain event");
     return result;
 }

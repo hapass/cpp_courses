@@ -21,6 +21,11 @@ private:
 };
 
 bool operator<(const Date& lhs, const Date& rhs);
+bool operator<=(const Date& lhs, const Date& rhs);
+bool operator>(const Date& lhs, const Date& rhs);
+bool operator>=(const Date& lhs, const Date& rhs);
+bool operator==(const Date& lhs, const Date& rhs);
+bool operator!=(const Date& lhs, const Date& rhs);
 std::istream& operator>>(std::istream& stream, Date& date);
 std::ostream& operator<<(std::ostream& stream, const Date& date);
 

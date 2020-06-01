@@ -1,9 +1,9 @@
 #pragma once
 
+#include "date.h"
+
 #include <string>
 #include <memory>
-
-class Date;
 
 enum class Comparison
 {
@@ -37,20 +37,30 @@ public:
 class LogicalOperationNode : public Node
 {
 public:
-    LogicalOperationNode(LogicalOperation op, std::shared_ptr<Node> lhs, std::shared_ptr<Node> rhs);
-    bool Evaluate(const Date &date, const std::string &event) const override;
+    LogicalOperationNode(LogicalOperation o, std::shared_ptr<Node> l, std::shared_ptr<Node> r);
+    bool Evaluate(const Date &d, const std::string &e) const override;
+private:
+    const LogicalOperation operation;
+    const std::shared_ptr<Node> lhs;
+    const std::shared_ptr<Node> rhs;
 };
 
 class DateComparisonNode : public Node
 {
 public:
-    DateComparisonNode(Comparison comp, const Date &date);
-    bool Evaluate(const Date &date, const std::string &event) const override;
+    DateComparisonNode(Comparison c, const Date &d);
+    bool Evaluate(const Date &d, const std::string &e) const override;
+private:
+    const Comparison comparison;
+    const Date date;
 };
 
 class EventComparisonNode : public Node
 {
 public:
-    EventComparisonNode(Comparison comp, const std::string &event);
-    bool Evaluate(const Date &date, const std::string &event) const override;
+    EventComparisonNode(Comparison c, const std::string &e);
+    bool Evaluate(const Date &d, const std::string &e) const override;
+private:
+    const Comparison comparison;
+    const std::string event;
 };
