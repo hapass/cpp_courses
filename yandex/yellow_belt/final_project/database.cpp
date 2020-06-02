@@ -3,22 +3,39 @@
 
 using namespace std;
 
-void Database::Add(const Date &date, const string &event)
+ostream &operator<<(ostream &stream, const pair<Date, string> &pair)
 {
-    db[date].insert(event);
+    return stream << pair.first << " " << pair.second;
 }
 
-string Database::Last(const Date &date) const {
-    return string();
+void Database::Add(const Date &date, const string &event)
+{
+    auto p = make_pair(date, event);
+    auto it = equal_range(db.begin(), db.end(), p, [](const pair<Date, string> &element, const pair<Date, string> &value) {
+        return element.first < value.first;
+    });
+    if (find(it.first, it.second, p) == it.second)
+    {
+        db.insert(it.second, {date, event});
+    }
+}
+
+pair<Date, string> Database::Last(const Date &date) const
+{
+    auto iter_after = upper_bound(db.begin(), db.end(), make_pair(date, ""), [](const pair<Date, string> &element, const pair<Date, string> &value) {
+        return element.first < value.first;
+    });
+    if (iter_after == db.begin())
+    {
+        throw invalid_argument("no entries");
+    }
+    return *(--iter_after);
 }
 
 void Database::Print(ostream &stream) const
 {
-    for (const auto &[date, events] : db)
+    for (const auto &pair : db)
     {
-        for (const auto &event : events)
-        {
-            stream << date << " " << event << endl;
-        }
+        stream << pair << endl;
     }
 }

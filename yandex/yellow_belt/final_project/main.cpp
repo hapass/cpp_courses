@@ -180,7 +180,7 @@ void TestDelete()
     istringstream is("Add 2017-06-01 1st of June\nAdd 2017-07-08 8th of July\nAdd 2017-07-08 Someone's birthday\nDel date == 2017-07-08");
     ostringstream os;
     RunProgram(is, os);
-    AssertEqual(os.str(), "Removed 2 entries", "Delete test case.");
+    AssertEqual(os.str(), "Removed 2 entries\n", "Delete test case.");
 }
 
 void TestPrint()
@@ -188,7 +188,7 @@ void TestPrint()
     istringstream is("Add 2017-01-01 Holiday\nAdd 2017-03-08 Holiday\nAdd 2017-1-1 New Year\nAdd 2017-1-1 New Year\nPrint");
     ostringstream os;
     RunProgram(is, os);
-    AssertEqual(os.str(), "2017-01-01 Holiday\n2017-01-01 New Year\n2017-03-08 Holiday", "Print test case.");
+    AssertEqual(os.str(), "2017-01-01 Holiday\n2017-01-01 New Year\n2017-03-08 Holiday\n", "Print test case.");
 }
 
 void TestFind()
@@ -196,7 +196,7 @@ void TestFind()
     istringstream is("Add 2017-01-01 Holiday\nAdd 2017-03-08 Holiday\nAdd 2017-01-01 New Year\nFind event != \"working day\"\nAdd 2017-05-09 Holiday");
     ostringstream os;
     RunProgram(is, os);
-    AssertEqual(os.str(), "2017-01-01 Holiday\n2017-01-01 New Year\n2017-03-08 Holiday\nFound 3 entries", "Find test case.");
+    AssertEqual(os.str(), "2017-01-01 Holiday\n2017-01-01 New Year\n2017-03-08 Holiday\nFound 3 entries\n", "Find test case.");
 }
 
 void TestLast()
@@ -204,7 +204,7 @@ void TestLast()
     istringstream is("Add 2017-01-01 New Year\nAdd 2017-03-08 Holiday\nAdd 2017-01-01 Holiday\nLast 2016-12-31\nLast 2017-01-01\nLast 2017-06-01\nAdd 2017-05-09 Holiday");
     ostringstream os;
     RunProgram(is, os);
-    AssertEqual(os.str(), "No entries\n2017-01-01 Holiday\n2017-03-08 Holiday", "Last test case.");
+    AssertEqual(os.str(), "No entries\n2017-01-01 Holiday\n2017-03-08 Holiday\n", "Last test case.");
 }
 
 void TestIntegration()
@@ -212,7 +212,7 @@ void TestIntegration()
     istringstream is("Add 2017-11-21 Tuesday\nAdd 2017-11-20 Monday\nAdd 2017-11-21 Weekly meeting\nPrint\nFind event != \"Weekly meeting\"\nLast 2017-11-30\nDel date > 2017-11-20\nLast 2017-11-30\nLast 2017-11-01");
     ostringstream os;
     RunProgram(is, os);
-    AssertEqual(os.str(), "2017-11-20 Monday\n2017-11-21 Tuesday\n2017-11-21 Weekly meeting\n2017-11-20 Monday\n2017-11-21 Tuesday\nFound 2 entries\n2017-11-21 Weekly meeting\nRemoved 2 entries\n2017-11-20 Monday\nNo entries", "Integration test case.");
+    AssertEqual(os.str(), "2017-11-20 Monday\n2017-11-21 Tuesday\n2017-11-21 Weekly meeting\n2017-11-20 Monday\n2017-11-21 Tuesday\nFound 2 entries\n2017-11-21 Weekly meeting\nRemoved 2 entries\n2017-11-20 Monday\nNo entries\n", "Integration test case.");
 }
 
 void TestAll()
