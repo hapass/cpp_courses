@@ -4,7 +4,7 @@ using namespace std;
 
 bool EmptyNode::Evaluate(const Date &date, const string &event) const
 {
-    return false;
+    return true;
 }
 
 LogicalOperationNode::LogicalOperationNode(LogicalOperation o, shared_ptr<Node> l, shared_ptr<Node> r)
