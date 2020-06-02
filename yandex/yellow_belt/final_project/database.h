@@ -17,21 +17,37 @@ public:
     template <typename P>
     int RemoveIf(P predicate)
     {
-        auto it = std::remove_if(db.begin(), db.end(), [predicate](const std::pair<Date, std::string> &pair) {
-            return predicate(pair.first, pair.second);
-        });
-        int count = db.end() - it;
-        db.erase(it, db.end());
-        return count;
+        std::vector<std::pair<Date, std::string>> result = FindIf(predicate);
+        for (const auto &pair : result)
+        {
+            auto &vec = db_vec.at(pair.first);
+            auto it = std::remove(vec.begin(), vec.end(), pair.second);
+            vec.erase(it, vec.end());
+            db_set.at(pair.first).erase(pair.second);
+
+            if (db_set.count(pair.first) != 0 && db_set.at(pair.first).size() == 0)
+            {
+                db_set.erase(pair.first);
+                db_vec.erase(pair.first);
+            }
+        }
+        return result.size();
     }
 
     template <typename P>
     std::vector<std::pair<Date, std::string>> FindIf(P predicate) const
     {
         std::vector<std::pair<Date, std::string>> result;
-        std::copy_if(db.begin(), db.end(), std::back_inserter(result), [predicate](const std::pair<Date, std::string> &pair) {
-            return predicate(pair.first, pair.second);
-        });
+        for (const auto &pair : db_vec)
+        {
+            for (const auto &event : pair.second)
+            {
+                if (predicate(pair.first, event))
+                {
+                    result.push_back({pair.first, event});
+                }
+            }
+        }
         return result;
     }
 
@@ -39,7 +55,8 @@ public:
     void Print(std::ostream &stream) const;
 
 private:
-    std::vector<std::pair<Date, std::string>> db;
+    std::map<Date, std::vector<std::string>> db_vec;
+    std::map<Date, std::set<std::string>> db_set;
 };
 
 std::ostream &operator<<(std::ostream &stream, const std::pair<Date, std::string> &pair);

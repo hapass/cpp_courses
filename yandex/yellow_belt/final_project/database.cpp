@@ -10,32 +10,30 @@ ostream &operator<<(ostream &stream, const pair<Date, string> &pair)
 
 void Database::Add(const Date &date, const string &event)
 {
-    auto p = make_pair(date, event);
-    auto it = equal_range(db.begin(), db.end(), p, [](const pair<Date, string> &element, const pair<Date, string> &value) {
-        return element.first < value.first;
-    });
-    if (find(it.first, it.second, p) == it.second)
-    {
-        db.insert(it.second, {date, event});
+    if (db_set.count(date) == 0 || db_set.at(date).count(event) == 0) {
+        db_set[date].insert(event);
+        db_vec[date].push_back(event);
     }
 }
 
 pair<Date, string> Database::Last(const Date &date) const
 {
-    auto iter_after = upper_bound(db.begin(), db.end(), make_pair(date, ""), [](const pair<Date, string> &element, const pair<Date, string> &value) {
-        return element.first < value.first;
-    });
-    if (iter_after == db.begin())
+    auto iter_after = db_set.upper_bound(date);
+    if (iter_after == db_set.begin())
     {
         throw invalid_argument("no entries");
     }
-    return *(--iter_after);
+    const Date& upper_date = (--iter_after)->first;
+    return { upper_date, db_vec.at(upper_date).back() };
 }
 
 void Database::Print(ostream &stream) const
 {
-    for (const auto &pair : db)
+    for (const auto &pair : db_set)
     {
-        stream << pair << endl;
+        for (const auto &event : db_vec.at(pair.first))
+        {
+            stream << make_pair(pair.first, event) << endl;
+        }
     }
 }
