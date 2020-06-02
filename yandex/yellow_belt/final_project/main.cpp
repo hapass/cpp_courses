@@ -17,15 +17,11 @@ string ParseEvent(istream &is)
     return result;
 }
 
-void TestAll();
-
-int main()
+void RunProgram(istream& input, ostream& output)
 {
-    TestAll();
-
     Database db;
 
-    for (string line; getline(cin, line);)
+    for (string line; getline(input, line);)
     {
         istringstream is(line);
 
@@ -39,7 +35,7 @@ int main()
         }
         else if (command == "Print")
         {
-            db.Print(cout);
+            db.Print(output);
         }
         else if (command == "Del")
         {
@@ -48,7 +44,7 @@ int main()
                 return condition->Evaluate(date, event);
             };
             int count = db.RemoveIf(predicate);
-            cout << "Removed " << count << " entries" << endl;
+            output << "Removed " << count << " entries" << endl;
         }
         else if (command == "Find")
         {
@@ -60,19 +56,19 @@ int main()
             const auto entries = db.FindIf(predicate);
             for (const auto &entry : entries)
             {
-                cout << entry << endl;
+                output << entry << endl;
             }
-            cout << "Found " << entries.size() << " entries" << endl;
+            output << "Found " << entries.size() << " entries" << endl;
         }
         else if (command == "Last")
         {
             try
             {
-                cout << db.Last(ParseDate(is)) << endl;
+                output << db.Last(ParseDate(is)) << endl;
             }
             catch (invalid_argument &)
             {
-                cout << "No entries" << endl;
+                output << "No entries" << endl;
             }
         }
         else if (command.empty())
@@ -84,8 +80,6 @@ int main()
             throw logic_error("Unknown command: " + command);
         }
     }
-
-    return 0;
 }
 
 void TestParseCondition()
@@ -181,9 +175,61 @@ void TestParseEvent()
     }
 }
 
+void TestDelete()
+{
+    istringstream is("Add 2017-06-01 1st of June\nAdd 2017-07-08 8th of July\nAdd 2017-07-08 Someone's birthday\nDel date == 2017-07-08");
+    ostringstream os;
+    RunProgram(is, os);
+    AssertEqual(os.str(), "Removed 2 entries", "Delete test case.");
+}
+
+void TestPrint()
+{
+    istringstream is("Add 2017-01-01 Holiday\nAdd 2017-03-08 Holiday\nAdd 2017-1-1 New Year\nAdd 2017-1-1 New Year\nPrint");
+    ostringstream os;
+    RunProgram(is, os);
+    AssertEqual(os.str(), "2017-01-01 Holiday\n2017-01-01 New Year\n2017-03-08 Holiday", "Print test case.");
+}
+
+void TestFind()
+{
+    istringstream is("Add 2017-01-01 Holiday\nAdd 2017-03-08 Holiday\nAdd 2017-01-01 New Year\nFind event != \"working day\"\nAdd 2017-05-09 Holiday");
+    ostringstream os;
+    RunProgram(is, os);
+    AssertEqual(os.str(), "2017-01-01 Holiday\n2017-01-01 New Year\n2017-03-08 Holiday\nFound 3 entries", "Find test case.");
+}
+
+void TestLast()
+{
+    istringstream is("Add 2017-01-01 New Year\nAdd 2017-03-08 Holiday\nAdd 2017-01-01 Holiday\nLast 2016-12-31\nLast 2017-01-01\nLast 2017-06-01\nAdd 2017-05-09 Holiday");
+    ostringstream os;
+    RunProgram(is, os);
+    AssertEqual(os.str(), "No entries\n2017-01-01 Holiday\n2017-03-08 Holiday", "Last test case.");
+}
+
+void TestIntegration()
+{
+    istringstream is("Add 2017-11-21 Tuesday\nAdd 2017-11-20 Monday\nAdd 2017-11-21 Weekly meeting\nPrint\nFind event != \"Weekly meeting\"\nLast 2017-11-30\nDel date > 2017-11-20\nLast 2017-11-30\nLast 2017-11-01");
+    ostringstream os;
+    RunProgram(is, os);
+    AssertEqual(os.str(), "2017-11-20 Monday\n2017-11-21 Tuesday\n2017-11-21 Weekly meeting\n2017-11-20 Monday\n2017-11-21 Tuesday\nFound 2 entries\n2017-11-21 Weekly meeting\nRemoved 2 entries\n2017-11-20 Monday\nNo entries", "Integration test case.");
+}
+
 void TestAll()
 {
     TestRunner tr;
     tr.RunTest(TestParseEvent, "TestParseEvent");
     tr.RunTest(TestParseCondition, "TestParseCondition");
+    tr.RunTest(TestDelete, "TestDelete");
+    tr.RunTest(TestPrint, "TestPrint");
+    tr.RunTest(TestFind, "TestFind");
+    tr.RunTest(TestLast, "TestLast");
+    tr.RunTest(TestIntegration, "TestIntegration");
+}
+
+int main()
+{
+    TestAll();
+    RunProgram(cin, cout);
+    return 0;
 }
