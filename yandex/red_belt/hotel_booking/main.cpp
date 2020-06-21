@@ -2,68 +2,72 @@
 #include <string>
 #include <set>
 #include <map>
-#include <deque>
+#include <queue>
 
 using namespace std;
 
 class HotelManager {
 
-struct TimedData
+struct SecondData
 {
   int64_t time;
   map<string, int64_t> room_counts;
-  map<string, set<int64_t>> client_ids;
+  map<string, map<int64_t, int64_t>> client_counts;
 };
 
 public:
-  void Book(int64_t time, const string& hotel_name, const int64_t client_id, int64_t room_count) {
-    size_t size = all_hotel_data.size();
 
-    if (size != 0 && all_hotel_data[size - 1].time == time)
+  void Book(int64_t time, const string& hotel_name, const int64_t client_id, int64_t room_count) {
+    if (all_hotel_data.size() != 0 && all_hotel_data.back().time == time)
     {
-      TimedData& data = all_hotel_data[size - 1];
-      data.client_ids[hotel_name].insert(client_id);
+      SecondData& data = all_hotel_data.back();
+      data.client_counts[hotel_name][client_id]++;
       data.room_counts[hotel_name] += room_count;
+      all_room_counts[hotel_name] += room_count;
+      all_client_counts[hotel_name][client_id]++;
       return;
     }
     
-    TimedData data;
+    SecondData data;
     data.time = time;
     data.room_counts[hotel_name] = room_count;
-    data.client_ids[hotel_name].insert(client_id);
+    data.client_counts[hotel_name][client_id] = 1;
 
     all_hotel_data.push_back(data);
+    all_room_counts[hotel_name] += room_count;
+    all_client_counts[hotel_name][client_id]++;
 
-    int64_t threshold = all_hotel_data[all_hotel_data.size() - 1].time - 86400;
-    while (all_hotel_data.front().time <= threshold) all_hotel_data.pop_front();
+    int64_t threshold = all_hotel_data.back().time - 86400;
+    while (all_hotel_data.front().time <= threshold) {
+      for (const auto& [hotel_key, map_value] : all_hotel_data.front().client_counts) {
+        for (const auto& [client_key, client_value] : map_value) {
+          all_client_counts[hotel_key][client_key] -= client_value;
+          if (all_client_counts[hotel_key][client_key] <= 0) {
+            all_client_counts[hotel_key].erase(client_key);
+          }
+        }
+      }
+
+      for (const auto& [hotel_key, room_value] : all_hotel_data.front().room_counts) {
+        all_room_counts[hotel_key] -= room_value;
+      }
+
+      all_hotel_data.pop_front();
+    }
   }
 
   int64_t GetLastRoomCount(const string& hotel_name) {
-    int64_t total_room_count = 0;
-    for (const TimedData& data : all_hotel_data)
-    {
-      if (data.room_counts.count(hotel_name) != 0)
-      {
-        total_room_count += data.room_counts.at(hotel_name);
-      }
-    }
-    return total_room_count;
+    return all_room_counts[hotel_name];
   }
 
-  int64_t GetLastDistinctClientCount(const string& hotel_name) {
-    set<int64_t> distinct_clients;
-    for (const TimedData& data : all_hotel_data)
-    {
-      if (data.client_ids.count(hotel_name) != 0)
-      {
-        distinct_clients.insert(data.client_ids.at(hotel_name).begin(), data.client_ids.at(hotel_name).end());
-      }
-    }
-    return distinct_clients.size();
+  size_t GetLastDistinctClientCount(const string& hotel_name) {
+    return all_client_counts[hotel_name].size();
   }
 
 private:
-  deque<TimedData> all_hotel_data;
+  deque<SecondData> all_hotel_data;
+  map<string, int64_t> all_room_counts;
+  map<string, map<int64_t, int64_t>> all_client_counts;
 };
 
 int main() {
