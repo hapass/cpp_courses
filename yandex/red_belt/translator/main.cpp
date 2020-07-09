@@ -9,15 +9,8 @@ using namespace std;
 class Translator {
 public:
   void Add(string_view source, string_view target) {
-    string source_copy(source);
-    string target_copy(target);
-
-    words_.insert(source_copy);
-    words_.insert(target_copy);
-
-    const string& source_ref = *words_.find(source_copy);
-    const string& target_ref = *words_.find(target_copy);
-
+    const string& source_ref = *words_.insert(string(source)).first;
+    const string& target_ref = *words_.insert(string(target)).first;
     forward_translations_[source_ref] = target_ref;
     backward_translations_[target_ref] = source_ref;
   }
