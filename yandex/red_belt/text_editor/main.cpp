@@ -6,54 +6,66 @@ using namespace std;
 class Editor {
 public:
   Editor() {
-    cout << "created editor" << endl;
-    cursor_position_ = chars_.begin();
+    cursor_position_ = chars_.end();
   }
 
   void Left() {
-    cout << "left" << endl;
+    log("left");
     if (cursor_position_ != chars_.begin()) cursor_position_--;
   }
 
   void Right() {
-    cout << "right" << endl;
-    if (next(cursor_position_) != chars_.end()) cursor_position_++;
+    log("right");
+    if (cursor_position_ != chars_.end()) cursor_position_++;
   }
 
   void Insert(char token) {
-    cout << "insert " << token << endl;
-    chars_.insert(cursor_position_, token);
-    cursor_position_++;
+    cursor_position_ = next(chars_.insert(cursor_position_, token));
+    log("inserted " + string(1, token));
   }
 
   void Cut(size_t tokens = 1) {
-    cout << "cut " << string(SelectionBegin(), SelectionEnd(tokens)) << endl;
+    log("cut", tokens);
     buffer_.clear();
-    buffer_.splice(buffer_.begin(), chars_, SelectionBegin(), SelectionEnd(tokens));
+    auto begin = cursor_position_;
+    cursor_position_ = SelectionEnd(tokens);
+    buffer_.splice(buffer_.begin(), chars_, begin, cursor_position_);
   }
 
   void Copy(size_t tokens = 1) {
-    cout << "copy " << string(SelectionBegin(), SelectionEnd(tokens)) << endl;
+    log("copy", tokens);
     buffer_.clear();
-    buffer_.insert(buffer_.end(), SelectionBegin(), SelectionEnd(tokens));
+    buffer_.insert(buffer_.end(), cursor_position_, SelectionEnd(tokens));
   }
 
   void Paste() {
-    cout << "paste " << string(buffer_.begin(), buffer_.end()) << endl;
-    chars_.insert(next(cursor_position_), buffer_.begin(), buffer_.end());
+    log("paste");
+    chars_.insert(cursor_position_, buffer_.begin(), buffer_.end());
   }
 
   string GetText() const {
-    cout << "get text" << endl;
     return string(chars_.begin(), chars_.end());
   }
 
 private:
-  std::list<char>::iterator SelectionBegin() const {
-    return cursor_position_;
+  void log(const string& message, size_t selected = 0) const {
+    cout << message;
+
+    if (selected > 0) {
+      cout << "|Selected: " << string(cursor_position_, SelectionEnd(selected));
+    }
+
+    if (buffer_.begin() != buffer_.end()) {
+      cout << "|Buffer: " << string(buffer_.begin(), buffer_.end());
+    }
+
+    if (chars_.begin() != chars_.end()) cout << "|Text " << GetText();
+    cout << "|Cursor " << (cursor_position_ != chars_.end() ? *cursor_position_ : '$');
+
+    cout << endl;
   }
 
-  std::list<char>::iterator SelectionEnd(size_t selected_elements) const {
+  list<char>::iterator SelectionEnd(size_t selected_elements) const {
     auto selection_end = cursor_position_;
     while (selected_elements != 0 && selection_end != chars_.end()) {
      selection_end++;
@@ -62,9 +74,9 @@ private:
     return selection_end;
   }
 
-  std::list<char>::iterator cursor_position_;
-  std::list<char> chars_;
-  std::list<char> buffer_;
+  list<char>::iterator cursor_position_;
+  list<char> chars_;
+  list<char> buffer_;
 };
 
 void TypeText(Editor& editor, const string& text) {
