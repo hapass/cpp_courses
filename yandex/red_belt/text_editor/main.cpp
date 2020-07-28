@@ -10,22 +10,18 @@ public:
   }
 
   void Left() {
-    log("left");
     if (cursor_position_ != chars_.begin()) cursor_position_--;
   }
 
   void Right() {
-    log("right");
     if (cursor_position_ != chars_.end()) cursor_position_++;
   }
 
   void Insert(char token) {
     cursor_position_ = next(chars_.insert(cursor_position_, token));
-    log("inserted " + string(1, token));
   }
 
   void Cut(size_t tokens = 1) {
-    log("cut", tokens);
     buffer_.clear();
     auto begin = cursor_position_;
     cursor_position_ = SelectionEnd(tokens);
@@ -33,13 +29,11 @@ public:
   }
 
   void Copy(size_t tokens = 1) {
-    log("copy", tokens);
     buffer_.clear();
     buffer_.insert(buffer_.end(), cursor_position_, SelectionEnd(tokens));
   }
 
   void Paste() {
-    log("paste");
     chars_.insert(cursor_position_, buffer_.begin(), buffer_.end());
   }
 
@@ -48,23 +42,6 @@ public:
   }
 
 private:
-  void log(const string& message, size_t selected = 0) const {
-    cout << message;
-
-    if (selected > 0) {
-      cout << "|Selected: " << string(cursor_position_, SelectionEnd(selected));
-    }
-
-    if (buffer_.begin() != buffer_.end()) {
-      cout << "|Buffer: " << string(buffer_.begin(), buffer_.end());
-    }
-
-    if (chars_.begin() != chars_.end()) cout << "|Text " << GetText();
-    cout << "|Cursor " << (cursor_position_ != chars_.end() ? *cursor_position_ : '$');
-
-    cout << endl;
-  }
-
   list<char>::iterator SelectionEnd(size_t selected_elements) const {
     auto selection_end = cursor_position_;
     while (selected_elements != 0 && selection_end != chars_.end()) {
