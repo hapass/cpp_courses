@@ -16,6 +16,52 @@ Stats ServeRequests(istream& input) {
   return result;
 }
 
+void TestRequestParser() {
+  {
+    const string input = "(GET / HTTP/1.1";
+    HttpRequest request = ParseRequest(input);
+    ASSERT_EQUAL(request.method, "(GET");
+    ASSERT_EQUAL(request.uri, "/");
+    ASSERT_EQUAL(request.protocol, "HTTP/1.1");
+  }
+
+  {
+    string result;
+    try
+    {
+      const string input = "GET/ HTTP/1.1";
+      ParseRequest(input);
+    }
+    catch(const invalid_argument& e)
+    {
+      result = e.what();
+    }
+    ASSERT_EQUAL(result, "only one space in request header");
+  }
+
+  {
+    string result;
+    try
+    {
+      const string input = "GET/HTTP/1.1";
+      ParseRequest(input);
+    }
+    catch(const invalid_argument& e)
+    {
+      result = e.what();
+    }
+    ASSERT_EQUAL(result, "no spaces in request header");
+  }
+
+  {
+    const string input = "   ";
+    HttpRequest request = ParseRequest(input);
+    ASSERT_EQUAL(request.method, "");
+    ASSERT_EQUAL(request.uri, "");
+    ASSERT_EQUAL(request.protocol, " ");
+  }
+}
+
 void TestBasic() {
   const string input =
     R"(GET / HTTP/1.1
@@ -84,6 +130,7 @@ void TestAbsentParts() {
 
 int main() {
   TestRunner tr;
-  RUN_TEST(tr, TestBasic);
-  RUN_TEST(tr, TestAbsentParts);
+  RUN_TEST(tr, TestRequestParser);
+  // RUN_TEST(tr, TestBasic);
+  // RUN_TEST(tr, TestAbsentParts);
 }
