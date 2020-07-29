@@ -18,9 +18,9 @@ Stats ServeRequests(istream& input) {
 
 void TestRequestParser() {
   {
-    const string input = "(GET / HTTP/1.1";
+    const string input = "   GET / HTTP/1.1   ";
     HttpRequest request = ParseRequest(input);
-    ASSERT_EQUAL(request.method, "(GET");
+    ASSERT_EQUAL(request.method, "GET");
     ASSERT_EQUAL(request.uri, "/");
     ASSERT_EQUAL(request.protocol, "HTTP/1.1");
   }
@@ -29,7 +29,7 @@ void TestRequestParser() {
     string result;
     try
     {
-      const string input = "GET/ HTTP/1.1";
+      const string input = "   GET/ HTTP/1.1   ";
       ParseRequest(input);
     }
     catch(const invalid_argument& e)
@@ -43,7 +43,7 @@ void TestRequestParser() {
     string result;
     try
     {
-      const string input = "GET/HTTP/1.1";
+      const string input = "   GET/HTTP/1.1   ";
       ParseRequest(input);
     }
     catch(const invalid_argument& e)
@@ -54,11 +54,11 @@ void TestRequestParser() {
   }
 
   {
-    const string input = "   ";
+    const string input = "   hea   der   ";
     HttpRequest request = ParseRequest(input);
-    ASSERT_EQUAL(request.method, "");
+    ASSERT_EQUAL(request.method, "hea");
     ASSERT_EQUAL(request.uri, "");
-    ASSERT_EQUAL(request.protocol, " ");
+    ASSERT_EQUAL(request.protocol, " der");
   }
 }
 
@@ -131,6 +131,6 @@ void TestAbsentParts() {
 int main() {
   TestRunner tr;
   RUN_TEST(tr, TestRequestParser);
-  // RUN_TEST(tr, TestBasic);
-  // RUN_TEST(tr, TestAbsentParts);
+  RUN_TEST(tr, TestBasic);
+  RUN_TEST(tr, TestAbsentParts);
 }
