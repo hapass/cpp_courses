@@ -4,22 +4,32 @@
 #include <iterator>
 #include <numeric>
 #include <vector>
+#include <list>
 
 using namespace std;
 
 template <typename RandomIt>
 void MakeJosephusPermutation(RandomIt first, RandomIt last, uint32_t step_size) {
-  vector<typename RandomIt::value_type> pool;
+  if (first == last || step_size == 0) return;
+
+  list<typename RandomIt::value_type> pool;
   for (RandomIt it = first; it != last; it++) pool.push_back(move(*it));
 
-  size_t cur_pos = 0;
-  while (!pool.empty()) {
-    *(first++) = move(pool[cur_pos]);
-    pool.erase(pool.begin() + cur_pos);
-    if (pool.empty()) {
-      break;
+  auto c = pool.begin();
+
+  while (true) {
+    *(first++) = move(*c);
+    auto n = pool.erase(c);
+
+    if (pool.begin() == pool.end()) break;
+    if (n == pool.end()) n = pool.begin();
+
+    int steps_to_next = step_size - 1;
+    while(steps_to_next-- > 0) {
+      n++;
+      if (n == pool.end()) n = pool.begin();
     }
-    cur_pos = (cur_pos + step_size - 1) % pool.size();
+    c = n;
   }
 }
 
