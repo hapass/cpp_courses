@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -19,7 +20,8 @@ public:
   PriorityCollection(): id_(0) {}
 
   Id Add(T object) {
-    objects_[id_++] = move(object);
+    objects_[++id_] = make_pair<T, int>(move(object), 0);
+    priority_to_ids_[0].insert(id_);
     return id_;
   }
 
@@ -44,8 +46,11 @@ public:
     int old_priority = objects_.at(id).second;
     int new_priority = old_priority + 1;
     objects_.at(id).second = new_priority;
-    priority_to_ids_.at(old_priority).erase(id);
+    RemoveFromPriorityToId(old_priority, id);
     priority_to_ids_[new_priority].insert(id);
+    stringstream ss;
+    ss << "promotion of " << id;
+    TraceData(ss.str());
   }
 
   pair<const T&, int> GetMax() const {
@@ -53,17 +58,43 @@ public:
     return {objects_.at(max_entry.first), max_entry.second};
   }
 
-  pair<T, int> PopMax() const {
+  pair<T, int> PopMax() {
     pair<Id, int> max_entry = GetMaxEntry();
-    pair<T, int> max_object = { move(objects_.at(max_entry.first)), max_entry.second };
-    priority_to_ids_.at(max_entry.second).erase(max_entry.first);
+    pair<T, int> max_object = move(objects_.at(max_entry.first));
+    RemoveFromPriorityToId(max_entry.second, max_entry.first);
     objects_.erase(max_entry.first);
+    TraceData("pop max");
     return max_object;
   }
 
 private:
   pair<Id, int> GetMaxEntry() const {
-    return {*priority_to_ids_.rbegin()->second.begin(), priority_to_ids_.rbegin()->first};
+    auto max = priority_to_ids_.rbegin();
+    return {*max->second.rbegin(), max->first};
+  }
+
+  void RemoveFromPriorityToId(int priority, Id id) {
+    priority_to_ids_.at(priority).erase(id);
+    if (priority_to_ids_.at(priority).size() == 0) {
+      priority_to_ids_.erase(priority);
+    }
+  }
+
+  void TraceData(const string& message) const {
+    cout << "trace data after " << message << endl;
+    cout << "  objects: " << endl;
+    for (const auto& [id, object_priority_pair] : objects_) {
+      cout << "    id: " << id << " object: " << object_priority_pair.first << " priority: " << object_priority_pair.second << endl;
+    }
+
+    cout << "  priorities: " << endl;
+    for (const auto& [priority, id_set] : priority_to_ids_) {
+      cout << "    priority: " << priority << endl;
+      
+      for (auto id : id_set) {
+        cout << "      id: " << id << endl;
+      }
+    }
   }
 
   map<Id, pair<T, int>> objects_;
@@ -71,22 +102,46 @@ private:
   uint64_t id_;
 };
 
+class StringNonCopyable : public string {
+public:
+  using string::string;
+  StringNonCopyable(const StringNonCopyable&) = delete;
+  StringNonCopyable(StringNonCopyable&&) = default;
+  StringNonCopyable& operator=(const StringNonCopyable&) = delete;
+  StringNonCopyable& operator=(StringNonCopyable&&) = default;
+};
+
+void TestNoCopy() {
+  PriorityCollection<StringNonCopyable> strings;
+  strings.Add("white");
+  const auto yellow_id = strings.Add("yellow");
+  const auto red_id = strings.Add("red");
+
+  strings.Promote(yellow_id);
+  for (int i = 0; i < 2; ++i) {
+    strings.Promote(red_id);
+  }
+  strings.Promote(yellow_id);
+
+  {
+    const auto item = strings.PopMax();
+    ASSERT_EQUAL(item.first, "red");
+    ASSERT_EQUAL(item.second, 2);
+  }
+  {
+    const auto item = strings.PopMax();
+    ASSERT_EQUAL(item.first, "yellow");
+    ASSERT_EQUAL(item.second, 2);
+  }
+  {
+    const auto item = strings.PopMax();
+    ASSERT_EQUAL(item.first, "white");
+    ASSERT_EQUAL(item.second, 0);
+  }
+}
+
 int main() {
-  PriorityCollection<string> collection;
-
-  collection.Add("one");
-  PriorityCollection<string>::Id two_id = collection.Add("two");
-  PriorityCollection<string>::Id three_id = collection.Add("three");
-
-  collection.Promote(two_id);
-  collection.Promote(two_id);
-  collection.Promote(three_id);
-
-  auto first = collection.PopMax();
-  auto second = collection.PopMax();
-  auto third = collection.PopMax();
-  cout << first.first << endl;
-  cout << second.first << endl;
-  cout << third.first << endl;
+  TestRunner tr;
+  RUN_TEST(tr, TestNoCopy);
   return 0;
 }
