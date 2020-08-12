@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 #include <string>
+#include <functional>
 #include <assert.h>
 
 using namespace std;
@@ -55,7 +56,7 @@ public:
   pair<const T&, int> GetMax() const {
     pair<Id, int> max_entry = GetMaxEntry();
     const pair<T, int>& max_object = objects_.at(max_entry.first);
-    return tie(max_object.first, max_object.second);
+    return make_pair(reference_wrapper(max_object.first), max_object.second);
   }
 
   pair<T, int> PopMax() {
