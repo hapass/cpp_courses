@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 #include <string>
+#include <assert.h>
 
 using namespace std;
 
@@ -43,6 +44,7 @@ public:
   }
 
   void Promote(Id id) {
+    assert(IsValid(id));
     int old_priority = objects_.at(id).second;
     int new_priority = old_priority + 1;
     objects_.at(id).second = new_priority;
@@ -65,7 +67,9 @@ public:
 
 private:
   pair<Id, int> GetMaxEntry() const {
+    assert(priority_to_ids_.size() > 0);
     auto max = priority_to_ids_.rbegin();
+    assert(max->second.size() > 0);
     return {*max->second.rbegin(), max->first};
   }
 
