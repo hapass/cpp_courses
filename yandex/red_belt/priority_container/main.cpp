@@ -8,7 +8,6 @@
 #include <utility>
 #include <vector>
 #include <string>
-#include <sstream>
 
 using namespace std;
 
@@ -39,6 +38,7 @@ public:
   }
 
   const T& Get(Id id) const {
+    assert(IsValid(id));
     return objects_.at(id).first;
   }
 
@@ -48,9 +48,6 @@ public:
     objects_.at(id).second = new_priority;
     RemoveFromPriorityToId(old_priority, id);
     priority_to_ids_[new_priority].insert(id);
-    stringstream ss;
-    ss << "promotion of " << id;
-    TraceData(ss.str());
   }
 
   pair<const T&, int> GetMax() const {
@@ -63,7 +60,6 @@ public:
     pair<T, int> max_object = move(objects_.at(max_entry.first));
     RemoveFromPriorityToId(max_entry.second, max_entry.first);
     objects_.erase(max_entry.first);
-    TraceData("pop max");
     return max_object;
   }
 
@@ -77,23 +73,6 @@ private:
     priority_to_ids_.at(priority).erase(id);
     if (priority_to_ids_.at(priority).size() == 0) {
       priority_to_ids_.erase(priority);
-    }
-  }
-
-  void TraceData(const string& message) const {
-    cout << "trace data after " << message << endl;
-    cout << "  objects: " << endl;
-    for (const auto& [id, object_priority_pair] : objects_) {
-      cout << "    id: " << id << " object: " << object_priority_pair.first << " priority: " << object_priority_pair.second << endl;
-    }
-
-    cout << "  priorities: " << endl;
-    for (const auto& [priority, id_set] : priority_to_ids_) {
-      cout << "    priority: " << priority << endl;
-      
-      for (auto id : id_set) {
-        cout << "      id: " << id << endl;
-      }
     }
   }
 
