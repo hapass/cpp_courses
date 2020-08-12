@@ -54,7 +54,8 @@ public:
 
   pair<const T&, int> GetMax() const {
     pair<Id, int> max_entry = GetMaxEntry();
-    return {objects_.at(max_entry.first), max_entry.second};
+    const pair<T, int>& max_object = objects_.at(max_entry.first);
+    return tie(max_object.first, max_object.second);
   }
 
   pair<T, int> PopMax() {
@@ -107,6 +108,7 @@ void TestNoCopy() {
   strings.Promote(yellow_id);
 
   {
+    ASSERT_EQUAL(strings.GetMax().first, "red");
     const auto item = strings.PopMax();
     ASSERT_EQUAL(item.first, "red");
     ASSERT_EQUAL(item.second, 2);
