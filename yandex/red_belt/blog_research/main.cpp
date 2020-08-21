@@ -5,6 +5,7 @@
 #include <string>
 #include <string_view>
 #include <utility>
+#include <future>
 using namespace std;
 
 struct Stats {
@@ -41,7 +42,31 @@ Stats ExploreKeyWordsSingleThread(
 }
 
 Stats ExploreKeyWords(const set<string>& key_words, istream& input) {
-  return ExploreKeyWordsSingleThread(key_words, input);
+  vector<string> all_lines;
+  for (string line; getline(input, line); ) all_lines.push_back(line);
+  size_t processors_count = 8;
+  size_t parts = all_lines.size() < processors_count ? 1 : processors_count;
+  size_t chunk_size = all_lines.size() / parts;
+
+  vector<stringstream> chunks(parts);
+  for (size_t i = 0; i < chunks.size(); i++) {
+    size_t chunk_start = i * chunk_size;
+    size_t chunk_end = i == (chunks.size() - 1) ? all_lines.size() : chunk_start + chunk_size;
+    for (size_t j = chunk_start; j < chunk_end; j++) {
+      chunks[i] << all_lines[j] << '\n';
+    }
+  }
+
+  vector<future<Stats>> stats;
+  for (auto& chunk : chunks) {
+    stats.push_back(async(ExploreKeyWordsSingleThread, ref(key_words), ref(chunk)));
+  }
+
+  Stats result;
+  for (auto& stat : stats) {
+    result += stat.get();
+  }
+  return result;
 }
 
 void TestBasic() {
