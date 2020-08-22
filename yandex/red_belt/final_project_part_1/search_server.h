@@ -3,23 +3,29 @@
 #include <istream>
 #include <ostream>
 #include <set>
-#include <list>
 #include <vector>
 #include <map>
 #include <string>
 using namespace std;
 
+struct SearchResult {
+  size_t hit_count;
+  size_t docid;
+};
+
 class InvertedIndex {
 public:
-  void Add(const string& document);
-  list<size_t> Lookup(const string& word) const;
+  InvertedIndex() { docs.reserve(50000); }
+
+  void Add(string document);
+  map<size_t, size_t> Lookup(string_view word) const;
 
   const string& GetDocument(size_t id) const {
     return docs[id];
   }
 
 private:
-  map<string, list<size_t>> index;
+  map<string_view, map<size_t, size_t>> index;
   vector<string> docs;
 };
 
