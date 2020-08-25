@@ -18,7 +18,7 @@ public:
   InvertedIndex() { docs.reserve(50000); }
 
   void Add(string document);
-  map<size_t, size_t> Lookup(string_view word) const;
+  const map<size_t, size_t>& Lookup(string_view word) const;
 
   const string& GetDocument(size_t id) const {
     return docs[id];
@@ -26,6 +26,7 @@ public:
 
 private:
   map<string_view, map<size_t, size_t>> index;
+  map<size_t, size_t> empty;
   vector<string> docs;
 };
 
