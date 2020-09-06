@@ -3,11 +3,12 @@
 
 #include <algorithm>
 #include <iterator>
+#include <array>
 #include <sstream>
 #include <iostream>
 
-map<string_view, size_t> SplitIntoWords(string_view s) {
-  map<string_view, size_t> result;
+unordered_map<string_view, size_t> SplitIntoWords(string_view s) {
+  unordered_map<string_view, size_t> result;
   while (!s.empty()) {
     size_t pos = s.find(' ');
     if (pos != 0) result[s.substr(0, pos)]++;
@@ -17,8 +18,8 @@ map<string_view, size_t> SplitIntoWords(string_view s) {
 }
 
 bool operator<(const SearchResult& lhs, const SearchResult& rhs) {
-  if (lhs.hit_count == rhs.hit_count) return lhs.docid > rhs.docid;
-  return lhs.hit_count < rhs.hit_count;
+  if (lhs.hit_count == rhs.hit_count) return lhs.doc_id < rhs.doc_id;
+  return lhs.hit_count > rhs.hit_count;
 }
 
 SearchServer::SearchServer(istream& document_input) {
@@ -36,24 +37,32 @@ void SearchServer::UpdateDocumentBase(istream& document_input) {
 }
 
 void SearchServer::AddQueriesStream(istream& query_input, ostream& search_results_output) {
+  unordered_map<size_t, size_t> doc_id_count;
+
+  vector<SearchResult> search_results;
+  search_results.reserve(6);
+
   for (string current_query; getline(query_input, current_query); ) {
     const auto words = SplitIntoWords(current_query);
 
-    map<size_t, size_t> docid_count;
-    for (const auto& word : words) 
-    for (const auto [docid, hitcount] : index.Lookup(word.first)) 
-      docid_count[docid] += hitcount;
+    doc_id_count.clear();
+    for (const auto [word, count] : words)
+    for (const auto [doc_id, hitcount] : index.Lookup(word)) 
+      doc_id_count[doc_id] += (hitcount * count);
 
-    vector<SearchResult> search_results;
-    search_results.reserve(docid_count.size());
-    for (const auto [docid, hitcount] : docid_count) {
-      search_results.push_back({ hitcount, docid });
+    search_results.clear();
+    for (const auto [doc_id, hitcount] : doc_id_count) {
+      search_results.push_back({ hitcount, doc_id }); push_heap(search_results.begin(), search_results.end());
+      if (search_results.size() == 6) {
+        pop_heap(search_results.begin(), search_results.end()); search_results.pop_back();
+      }
     }
-    sort(rbegin(search_results), rend(search_results));
+
+    sort(search_results.begin(), search_results.end());
 
     search_results_output << current_query << ':';
-    for (const auto [hitcount, docid] : Head(search_results, 5)) {
-      search_results_output << " {docid: " << docid << ", hitcount: " << hitcount << '}';
+    for (const auto& result : search_results) {
+      search_results_output << " {docid: " << result.doc_id << ", hitcount: " << result.hit_count << '}';
     }
     search_results_output << '\n';
   }
@@ -62,13 +71,13 @@ void SearchServer::AddQueriesStream(istream& query_input, ostream& search_result
 void InvertedIndex::Add(string document) {
   docs.push_back(move(document));
 
-  const size_t docid = docs.size() - 1;
-  for (const auto& [word, hitcount] : SplitIntoWords(docs.at(docid))) {
-    index[word][docid] = hitcount;
+  const size_t doc_id = docs.size() - 1;
+  for (const auto& [word, hitcount] : SplitIntoWords(docs.at(doc_id))) {
+    index[word][doc_id] = hitcount;
   }
 }
 
-const map<size_t, size_t>& InvertedIndex::Lookup(string_view word) const {
+const unordered_map<size_t, size_t>& InvertedIndex::Lookup(string_view word) const {
   if (auto it = index.find(word); it != index.end()) {
     return it->second;
   } else {
