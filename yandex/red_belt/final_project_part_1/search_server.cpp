@@ -37,31 +37,29 @@ void SearchServer::UpdateDocumentBase(istream& document_input) {
 }
 
 void SearchServer::AddQueriesStream(istream& query_input, ostream& search_results_output) {
-  unordered_map<size_t, size_t> doc_id_count;
-
-  vector<SearchResult> search_results;
-  search_results.reserve(6);
+  vector<SearchResult> doc_id_count(50000);
 
   for (string current_query; getline(query_input, current_query); ) {
-    const auto words = SplitIntoWords(current_query);
-
-    doc_id_count.clear();
-    for (const auto [word, count] : words)
-    for (const auto [doc_id, hitcount] : index.Lookup(word)) 
-      doc_id_count[doc_id] += (hitcount * count);
-
-    search_results.clear();
-    for (const auto [doc_id, hitcount] : doc_id_count) {
-      search_results.push_back({ hitcount, doc_id }); push_heap(search_results.begin(), search_results.end());
-      if (search_results.size() == 6) {
-        pop_heap(search_results.begin(), search_results.end()); search_results.pop_back();
-      }
+    for (size_t i = 0; i < doc_id_count.size(); i++)
+    {
+      doc_id_count[i].doc_id = i;
+      doc_id_count[i].hit_count = 0;
     }
 
-    sort(search_results.begin(), search_results.end());
+    size_t hits = 0;
+    const auto words = SplitIntoWords(current_query);
+    for (const auto& [word, count] : words)
+    for (const auto& [doc_id, hitcount] : index.Lookup(word))
+    {
+      if (doc_id_count[doc_id].hit_count == 0) hits++;
+      doc_id_count[doc_id].hit_count += (hitcount * count);
+    }
+
+    size_t min_hits = min(size_t(5), hits);
+    partial_sort(doc_id_count.begin(), doc_id_count.begin() + min_hits, doc_id_count.end());
 
     search_results_output << current_query << ':';
-    for (const auto& result : search_results) {
+    for (const auto& result : IteratorRange(doc_id_count.begin(), doc_id_count.begin() + min_hits)) {
       search_results_output << " {docid: " << result.doc_id << ", hitcount: " << result.hit_count << '}';
     }
     search_results_output << '\n';
